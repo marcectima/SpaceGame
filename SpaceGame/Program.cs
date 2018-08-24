@@ -4,40 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\nWelcome to Space Trader");
-
-            // Creates a new user.
-            string[] user = CreateUser();
-
-            Console.WriteLine($"\n>>> Hello {user[0]}. Your character has been created and awarded with 15,000 credits to start the game.");
-            Console.WriteLine(user[0] + " are a billionaire astronaut/scientist. You saw something from out of space with his \n" +
-                " telescope that looked very interesting. Dave went on a long journey in form. He realizes the creatures that \n" +
-                "where there can communicate with him. Dave saw a valuable item. Dave ask the creatures about the item. And, \n" +
-                "the creatures told Dave they got it from a planet call Prextie. Dave convince the creatures to take him to the \n" +
-                "planet. Dave couldn’t believe his eyes. Dave went back to their planet.  They’ve told the creatures he would \n" +
-                "return.  A month pass after Dave told his fellow earthling that he would be gone for a while. Dave return to \n" +
-                "the planet and ask the creatures to show him more. Dave return to Prextie and was able to make a space life for \n" +
-                "himself. He learned a lot of space life.");
-            Console.WriteLine("");
-            Console.WriteLine("\nPress Enter to Continue");
-            Console.ReadLine();
-            Console.Clear();
-
-            // Purchase the first ship.
-            string[] ship = NewShip(ref user);
-            Console.Clear();
-
-            // Opens action menu.
-            ShowActionMenu(ref user, ref ship);
-            Environment.Exit(-1);
-        }
+https://github.com/marcectima/SpaceGame.git
 
         // Action menu
         private static void ShowActionMenu(ref string[] user, ref string[] ship)
