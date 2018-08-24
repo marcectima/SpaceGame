@@ -10,25 +10,29 @@ namespace SpaceGame
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("\n>>> Welcome to Space Trader");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("\nWelcome to Space Trader");
 
             // Creates a new user.
             string[] user = CreateUser();
 
             Console.WriteLine($"\n>>> Hello {user[0]}. Your character has been created and awarded with 15,000 credits to start the game.");
-            //Console.WriteLine(user[0] + " are a billionaire astronaut/scientist. " + user[0] + " saw something \n " +
-            //    "from out of space with his  telescope that looked very interesting. Dave went on a long journey in \n" +
-            //    "space to discover whatever that was that interest him. He discovered that the planet had a whole life \n" +
-            //    "form. He realizes the creatures that where there can communicate with him. Dave saw a valuable item. \n" +
-            //    "Dave ask the creatures about the item. And, the creatures told Dave they got it from a planet call Prextie. \n" +
-            //    "Dave convince the creatures to take him to the planet. Dave couldn’t believe his eyes. Dave went back to \n" +
-            //    "their planet.  They’ve told the creatures he would return.  A month pass after Dave told his fellow \n" +
-            //    "earthling that he would be gone for a while. Dave return to the planet and ask the creatures to show him \n" +
-            //    "more. Dave return to Prextie and was able to make a space life for himself. He learned a lot of space life.");
-            //Console.WriteLine("");
+            Console.WriteLine(user[0] + " are a billionaire astronaut/scientist. You saw something from out of space with his \n" +
+                " telescope that looked very interesting. Dave went on a long journey in form. He realizes the creatures that \n" +
+                "where there can communicate with him. Dave saw a valuable item. Dave ask the creatures about the item. And, \n" +
+                "the creatures told Dave they got it from a planet call Prextie. Dave convince the creatures to take him to the \n" +
+                "planet. Dave couldn’t believe his eyes. Dave went back to their planet.  They’ve told the creatures he would \n" +
+                "return.  A month pass after Dave told his fellow earthling that he would be gone for a while. Dave return to \n" +
+                "the planet and ask the creatures to show him more. Dave return to Prextie and was able to make a space life for \n" +
+                "himself. He learned a lot of space life.");
+            Console.WriteLine("");
+            Console.WriteLine("\nPress Enter to Continue");
+            Console.ReadLine();
+            Console.Clear();
 
             // Purchase the first ship.
             string[] ship = NewShip(ref user);
+            Console.Clear();
 
             // Opens action menu.
             ShowActionMenu(ref user, ref ship);
@@ -43,13 +47,13 @@ namespace SpaceGame
             {
                 try
                 {
-                    Console.Clear();
-                    Console.WriteLine("\n>>> Select from the following options:");
-                    Console.WriteLine("Status       : 1");
-                    Console.WriteLine("Trade        : 2");
-                    Console.WriteLine("Travel to... : 3");
-                    Console.WriteLine("Change ship  : 4");
-                    Console.WriteLine("Quit game    : 5");
+                    Console.Write("Select from the following options:\n" +
+                                        "1. Status\n" +
+                                        "2. Trade\n" +
+                                        "3. Travel to...\n" +
+                                        "4. Change ship\n" +
+                                        "5. Quit game\n" +
+                                        "\n>>> ");
                     int selection = int.Parse(Console.ReadLine());
                     switch (selection)
                     {
@@ -66,6 +70,8 @@ namespace SpaceGame
                             NewShip(ref user);
                             break;
                         case 5:
+                            Console.WriteLine("You chose to end the game.");
+                            ShowStatus(user);
                             keepLooping = false;
                             break;
                     }
@@ -76,8 +82,9 @@ namespace SpaceGame
                 }
                 finally
                 {
-                    Console.WriteLine("\n>>> Press Enter to Continue.");
+                    Console.WriteLine("\nPress Enter to Continue");
                     Console.ReadLine();
+                    Console.Clear();
                 }
             } while (keepLooping);
         }
@@ -97,33 +104,39 @@ namespace SpaceGame
             double W = int.Parse(ship[1].Trim());
             try
             {
-                switch (user[4])
+                do
                 {
-                    case "Earth":
-                        from = Earth;
-                        Console.WriteLine("Where would you like to travel to? \n" +
-                        $"{destinations[1]} : 1\n" +
-                        $"{destinations[2]} : 2");
-                        if (Console.ReadLine().Trim() == "1") { whereTo = destinations[1]; }
-                        else if (Console.ReadLine() == "2") { whereTo = destinations[2]; }
-                        break;
-                    case "Alpha Centauri":
-                        from = AlphaCentauri;
-                        Console.WriteLine("Where would you like to travel to? \n" +
-                        $"{destinations[0]} : 1\n" +
-                        $"{destinations[2]} : 2");
-                        if (Console.ReadLine().Trim() == "1") { whereTo = destinations[0]; }
-                        else if (Console.ReadLine() == "2") { whereTo = destinations[2]; }
-                        break;
-                    case "Prextie":
-                        from = Prextie;
-                        Console.WriteLine("Where would you like to travel to? \n" +
-                        $"{destinations[0]} : 1\n" +
-                        $"{destinations[1]} : 2");
-                        if (Console.ReadLine().Trim() == "1") { whereTo = destinations[0]; }
-                        else if (Console.ReadLine() == "2") { whereTo = destinations[1]; }
-                        break;
-                }
+                    switch (user[4])
+                    {
+                        case "Earth":
+                            from = Earth;
+                            Console.WriteLine("Where would you like to travel to? \n" +
+                            $"1. {destinations[1]}\n" +
+                            $"2. {destinations[2]}");
+                            string selection1 = Console.ReadLine().Trim();
+                            if (selection1 == "1") { whereTo = destinations[1]; }
+                            else if (selection1 == "2") { whereTo = destinations[2]; }
+                            break;
+                        case "Alpha Centauri":
+                            from = AlphaCentauri;
+                            Console.WriteLine("Where would you like to travel to? \n" +
+                            $"1. {destinations[0]}\n" +
+                            $"2. {destinations[2]}");
+                            string selection2 = Console.ReadLine().Trim();
+                            if (selection2 == "1") { whereTo = destinations[0]; }
+                            else if (selection2 == "2") { whereTo = destinations[2]; }
+                            break;
+                        case "Prextie":
+                            from = Prextie;
+                            Console.WriteLine("Where would you like to travel to? \n" +
+                            $"1. {destinations[0]}\n" +
+                            $"2. {destinations[1]}");
+                            string selection3 = Console.ReadLine().Trim();
+                            if (selection3 == "1") { whereTo = destinations[0]; }
+                            else if (selection3 == "2") { whereTo = destinations[1]; }
+                            break;
+                    }
+                } while (whereTo == "");
                 switch (whereTo)
                 {
                     case "Earth":
@@ -160,9 +173,10 @@ namespace SpaceGame
             }
         }
 
+        // 
         private static void Trade()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Markets are closed due to the recent trade wars. Thanks Mr. President!");
         }
 
         // Displays information about user and currentShip
@@ -173,18 +187,18 @@ namespace SpaceGame
             Console.WriteLine($"location: {user[4]}");
         }
 
-        // Purchasing a ship
-        // [0] - type, [1] - speed, [2] - capacity, [3] - price.
+        // Purchasing a ship. [0] - type, [1] - speed, [2] - capacity, [3] - price.
         private static string[] NewShip(ref string[] user)
         {
             string[] currentShip = new string[4];
             try
             {
-                Console.WriteLine("\n>>> Select the type of ship you want to purchase: \n" +
-                    "Shuttlecraft   : 1 \n" +
-                    "Freighter      : 2 \n" +
-                    "Cruis Freighter: 3 \n" +
-                    "Starship       : 4");
+                Console.Write("Select the type of ship you want to purchase: \n" +
+                    "1. Shuttlecraft\n" +
+                    "2. Freighter\n" +
+                    "3. Cruis Freighter\n" +
+                    "4. Starship\n" +
+                    "\n>>> ");
                 int selectedShip = int.Parse(Console.ReadLine().Trim());
                 switch (selectedShip)
                 {
@@ -224,16 +238,18 @@ namespace SpaceGame
             return currentShip;
         }
 
-        // Creates a user
-        // [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location
+        // Creates a user. [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location
         private static string[] CreateUser()
         {
             string[] user = new string[5];
             try
             {
-                Console.WriteLine("\n>>> Type your name:");
-                user[0] = Console.ReadLine().Trim();
-                Console.WriteLine("\n>>> Select gender: \n Male  : 1 \n Female: 2");
+                Console.Write("\n>>> Type your name: ");
+                user[0] = Console.ReadLine();
+                Console.Write("\nSelect your gender\n" +
+                    "1. Male\n" +
+                    "2. Female\n" +
+                    "\n>>> ");
                 int gender = int.Parse(Console.ReadLine().Trim());
                 switch (gender)
                 {
@@ -255,6 +271,7 @@ namespace SpaceGame
             return user;
         }
 
+        // Displays the endgame stats.
         private static void EndGameReport()
         {
             throw new NotImplementedException();
