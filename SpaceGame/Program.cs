@@ -28,7 +28,7 @@ https://github.com/marcectima/SpaceGame.git
                             ShowStatus(user);
                             break;
                         case 2:
-                            Trade();
+                            Trade(ref user, ref ship);
                             break;
                         case 3:
                             ChangeLocation(ref user, ship);
@@ -141,9 +141,80 @@ https://github.com/marcectima/SpaceGame.git
         }
 
         // 
-        private static void Trade()
+        private static void Trade(ref string[] user, ref string[] ship)
         {
-            Console.WriteLine("Markets are closed due to the recent trade wars. Thanks Mr. President!");
+            string[] earthGoods = { "art", "wine", "literature" };
+            double[] eartPrices = { 1250.00, 750.00, 1499.99 };
+            string[] acGoods = { "dilithium crystals", "positronic brain" };
+            double[] acPrices = { 3250.00, 3075.50 };
+            string[] prextieGoods = { "dark enetrgy shots", "black whole tickets" };
+            double[] prextiePrices = { 3499.99, 4999.99 };
+            int selection = 0;
+            int quantity = 0;
+            Console.WriteLine("Select from the following uptions: \n" +
+            "1. buy\n" +
+            "2. sell");
+            int tradeMode = int.Parse(Console.ReadLine().Trim());
+            if (tradeMode == 1)
+            {
+                switch (user[4])
+                {
+                    case "Earth":
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {earthGoods[0]}\n" +
+                        $"2. {earthGoods[1]}\n" +
+                        $"3. {earthGoods[2]}");
+                        selection = int.Parse(Console.ReadLine().Trim());
+                        break;
+                    case "Alpha Centauri":
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {acGoods[0]}\n" +
+                        $"2. {acGoods[1]}");
+                        selection = int.Parse(Console.ReadLine().Trim());
+                        break;
+                    case "Prextie":
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {prextieGoods[0]}\n" +
+                        $"2. {prextieGoods[1]}\n");
+                        selection = int.Parse(Console.ReadLine().Trim());
+                        break;
+                }
+                Console.WriteLine("How many units would you like to buy?");
+                quantity = int.Parse(Console.ReadLine().Trim());
+                if (int.Parse(user[5].Trim()) < int.Parse(ship[2].Trim()))
+                {
+                    switch (user[4])
+                    {
+                        case "Earth":
+                            // updates the user's wallet
+                            user[2] = Convert.ToString(double.Parse(user[2]) - eartPrices[selection - 1]);
+                            break;
+                        case "Alpha Centauri":
+                            // updates the user's wallet
+                            user[2] = Convert.ToString(double.Parse(user[2]) - acPrices[selection - 1]);
+                            break;
+                        case "Prextie":
+                            // updates the user's wallet
+                            user[2] = Convert.ToString(double.Parse(user[2]) - prextiePrices[selection - 1]);
+                            break;
+                    }
+                    user[5] = Convert.ToString(int.Parse(user[5]) + quantity);
+                }
+                else
+                {
+                    Console.WriteLine("The ship's cargo is full.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("How many units would you like to sell?");
+                int sellQuantity = int.Parse(Console.ReadLine().Trim());
+                user[5] = Convert.ToString(int.Parse(user[5]) - sellQuantity);
+
+                // updates the user's wallet
+                user[2] = Convert.ToString(double.Parse(user[2]) + 5000);
+            }
+
         }
 
         // Displays information about user and currentShip
@@ -205,10 +276,10 @@ https://github.com/marcectima/SpaceGame.git
             return currentShip;
         }
 
-        // Creates a user. [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location
+        // Creates a user. [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location, [5] - goods quantity
         private static string[] CreateUser()
         {
-            string[] user = new string[5];
+            string[] user = new string[6];
             try
             {
                 Console.Write("\n>>> Type your name: ");
@@ -230,6 +301,7 @@ https://github.com/marcectima/SpaceGame.git
                 user[2] = "15000";
                 user[3] = "0";
                 user[4] = "Earth";
+                user[5] = "0";
             }
             catch (Exception ex)
             {
