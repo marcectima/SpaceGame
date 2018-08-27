@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,21 +73,9 @@ namespace SpaceGame
             Console.Clear();
             // Game's Story Line. Creates a new user.
             string[] user = CreateUser();
-            Console.WriteLine(("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                                   "Choose Your Gender: \n" +
-                "                                                   1. Male \n" +
-                "                                                   2. Female \n");
+            Console.WriteLine("Choose Your Gender: \n" +
+    "1. Male \n" +
+    "2. Female \n");
             string[] gen = new string[5];
             int x;
             x = Convert.ToInt32(Console.ReadLine());
@@ -156,8 +144,8 @@ namespace SpaceGame
                 "\n" +
                 "\n" +
                 "\n" +
-                "                  " + user[1] + " went on a long space journey to search for that which caught " + gen[2] + "\n" +
-                "                  " + "attention. " + gen[0] + " saw a planet that had a whole life form of itself. " + gen[0] + " also realized \n" +
+                "                  " + user[0] + " went on a long space journey to search for the which caught " + gen[2] + "\n" +
+                "                  " + "interest. " + gen[0] + " saw a planet that had a whole life form in itself. " + gen[0] + " also realized \n" +
                 "                  " + "that these creatures communicated well with " + gen[3] + ". " + user[0] + " saw a valuable \n" +
                 "                  " + "item. " + gen[0] + " ask the creatures about the item. And, the creatures told " + gen[3] + " they got it \n" +
                 "                  " + "from a planet call Prextie. So, "+ user[0] + " convince the creatures to take " + gen[3] + "\n" +
@@ -178,7 +166,7 @@ namespace SpaceGame
                 "\n" +
                 "\n" +
                 "                  " + user[0] + " couldn’t believe " + gen[2] + " eyes when " + gen[1] + " arrived at Prextie. " + gen[0] + " went back \n" +
-                "                  " + "to the creature's planet, and told the them that " + gen[1] + " would return. ");
+                "                  " + "to the creature's planet. And, told the creatures that " + gen[1] + " would return. ");
             Console.ReadLine();
             Console.Clear();
             Console.WriteLine("\n" +
@@ -195,7 +183,7 @@ namespace SpaceGame
                 "\n" +
                 "\n" +
                 "                  " + "A month pass after " + user[0] + " told " + gen[2] + " fellow earthlings that " + gen[1] + " would \n" +
-                "                  " + "be gone for a long time. " + user[0] + " return to the planet and ask the creatures \n" +
+                "                  " + "be gone for a while. " + user[0] + " return to the planet and ask the creatures \n" +
                 "                  " + "to show " + gen[3] + " more. " + gen[0] + " returned to Prextie and was able to make a space life for \n" +
                 "                  " + gen[4] + ". " + gen[0] + " learned a lot and gained a lot during " + gen[2] + " journey in space.");
             Console.ReadLine();
@@ -213,7 +201,7 @@ namespace SpaceGame
                 "\n" +
                 "\n" +
                 "                  " + user[0] + " collected and advance in the space life. " + gen[0] + " was able to obtain \n" +
-                "                  " + "15,000 credits during " + gen[2] + " time in space, and " + gen[1] + " wants more... \n" +
+                "                  " + "15,000 credits during " + gen[2] + " time in space, and " + gen[1] + " wants more. \n" +
                 "\n" +
                 "\n" +
                 "\n" + 
@@ -236,25 +224,13 @@ namespace SpaceGame
             {
                 try
                 {
-                    Console.Write(""\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "Select from the following options:\n" +
+                    Console.Write("Select from the following options:\n" +
                                         "1. Status\n" +
                                         "2. Trade\n" +
                                         "3. Travel to...\n" +
                                         "4. Change ship\n" +
                                         "5. Quit game\n" +
-                                        "\n>>> ");
+                                        "\n ");
                     int selection = int.Parse(Console.ReadLine());
                     switch (selection)
                     {
@@ -271,19 +247,7 @@ namespace SpaceGame
                             NewShip(ref user);
                             break;
                         case 5:
-                            Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "You chose to end the game.");
+                            Console.WriteLine("You chose to end the game.");
                             ShowStatus(user);
                             keepLooping = false;
                             break;
@@ -291,35 +255,11 @@ namespace SpaceGame
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "Invalid entry.");
+                    Console.WriteLine("Invalid entry.");
                 }
                 finally
                 {
-                    Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "Press Enter to Continue");
+                    Console.WriteLine("\nPress Enter to Continue");
                     Console.ReadLine();
                     Console.Clear();
                 }
@@ -348,50 +288,26 @@ namespace SpaceGame
                         case "Earth":
                             from = Earth;
                             Console.WriteLine("Where would you like to travel to? \n" +
-                            $"                                               " + "1. {destinations[1]}\n" +
-                            $"                                               " + "2. {destinations[2]}");
+                            $"1. {destinations[1]}\n" +
+                            $"2. {destinations[2]}");
                             string selection1 = Console.ReadLine().Trim();
                             if (selection1 == "1") { whereTo = destinations[1]; }
                             else if (selection1 == "2") { whereTo = destinations[2]; }
                             break;
                         case "Alpha Centauri":
                             from = AlphaCentauri;
-                            Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                                   Where would you like to travel to? \n" +
-                            $"                                               " + "1. {destinations[0]}\n" +
-                            $"                                               " + "2. {destinations[2]}");
+                            Console.WriteLine("Where would you like to travel to? \n" +
+                            $"1. {destinations[0]}\n" +
+                            $"2. {destinations[2]}");
                             string selection2 = Console.ReadLine().Trim();
                             if (selection2 == "1") { whereTo = destinations[0]; }
                             else if (selection2 == "2") { whereTo = destinations[2]; }
                             break;
                         case "Prextie":
                             from = Prextie;
-                            Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                                " + "Where would you like to travel to? \n" +
-                            $"                                               " + "1. {destinations[0]}\n" +
-                            $"                                               " + "2. {destinations[1]}");
+                            Console.WriteLine("Where would you like to travel to? \n" +
+                            $"1. {destinations[0]}\n" +
+                            $"2. {destinations[1]}");
                             string selection3 = Console.ReadLine().Trim();
                             if (selection3 == "1") { whereTo = destinations[0]; }
                             else if (selection3 == "2") { whereTo = destinations[1]; }
@@ -430,19 +346,7 @@ namespace SpaceGame
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "Invalid entry.");
+                Console.WriteLine("Invalid entry.");
             }
         }
 
@@ -466,74 +370,26 @@ namespace SpaceGame
                 switch (user[4])
                 {
                     case "Earth":
-                        Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "what would you like to buy? \n" +
-                        $"                                               " + "1. {earthGoods[0]}\n" +
-                        $"                                               " + "2. {earthGoods[1]}\n" +
-                        $"                                               " + "3. {earthGoods[2]}");
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {earthGoods[0]}\n" +
+                        $"2. {earthGoods[1]}\n" +
+                        $"3. {earthGoods[2]}");
                         selection = int.Parse(Console.ReadLine().Trim());
                         break;
                     case "Alpha Centauri":
-                        Console.WriteLine(""\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "what would you like to buy? \n" +
-                  $"                                              " + "1. {acGoods[0]}\n" +
-                  $"                                              " + "2. {acGoods[1]}");
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {acGoods[0]}\n" +
+                        $"2. {acGoods[1]}");
                         selection = int.Parse(Console.ReadLine().Trim());
                         break;
                     case "Prextie":
-                        Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "what would you like to buy? \n" +
-                 $"                                          " + "1. {prextieGoods[0]}\n" +
-                 $"                                          " + "2. {prextieGoods[1]}\n");
-                       selection = int.Parse(Console.ReadLine().Trim                                               
-                                  break;
+                        Console.WriteLine("what would you like to buy? \n" +
+                        $"1. {prextieGoods[0]}\n" +
+                        $"2. {prextieGoods[1]}\n");
+                        selection = int.Parse(Console.ReadLine().Trim());
+                        break;
                 }
-                Console.WriteLine(""\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "How many units would you like to buy?");
+                Console.WriteLine("How many units would you like to buy?");
                 quantity = int.Parse(Console.ReadLine().Trim());
                 if (int.Parse(user[5].Trim()) < int.Parse(ship[2].Trim()))
                 {
@@ -556,36 +412,12 @@ namespace SpaceGame
                 }
                 else
                 {
-                    Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "The ship's cargo is full.");
+                    Console.WriteLine("The ship's cargo is full.");
                 }
             }
             else
             {
-                Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "How many units would you like to sell?");
+                Console.WriteLine("How many units would you like to sell?");
                 int sellQuantity = int.Parse(Console.ReadLine().Trim());
                 user[5] = Convert.ToString(int.Parse(user[5]) - sellQuantity);
 
@@ -598,9 +430,9 @@ namespace SpaceGame
         // Displays information about user and currentShip
         private static void ShowStatus(string[] user)
         {
-            Console.WriteLine($"                                               " + "wallet: {user[2]}");
-            Console.WriteLine($"                                               " + "travel time: {user[3]}");
-            Console.WriteLine($"                                               " + "location: {user[4]}");
+            Console.WriteLine($"wallet: {user[2]}");
+            Console.WriteLine($"travel time: {user[3]}");
+            Console.WriteLine($"location: {user[4]}");
         }
 
         // Purchasing a ship. [0] - type, [1] - speed, [2] - capacity, [3] - price.
@@ -609,23 +441,12 @@ namespace SpaceGame
             string[] currentShip = new string[4];
             try
             {
-                Console.Write("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                                   Select the type of ship you want to purchase: \n"                    "1. Shuttlecraft\n" +
-                "                                                   " + "2. Freighter\n" +
-                "                                                   " + "3. Cruis Freighter\n" +
-                "                                                   " + "4. Starship\n" +
-                "                                                   " + "\n>>> ");
+                Console.Write("Select the type of ship you want to purchase: \n" +
+                    "1. Shuttlecraft\n" +
+                    "2. Freighter\n" +
+                    "3. Cruis Freighter\n" +
+                    "4. Starship\n" +
+                    "\n ");
                 int selectedShip = int.Parse(Console.ReadLine().Trim());
                 switch (selectedShip)
                 {
@@ -659,19 +480,7 @@ namespace SpaceGame
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "Invalid entry.");
+                Console.WriteLine("Invalid entry.");
 
             }
             return currentShip;
@@ -683,19 +492,7 @@ namespace SpaceGame
             string[] user = new string[6];
             try
             {
-                Console.Write("\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                               " + "Enter your character's name: ");
+                Console.Write("\n Enter your character's name: ");
                 user[0] = Console.ReadLine();
                 user[2] = "15000";
                 user[3] = "0";
@@ -704,19 +501,7 @@ namespace SpaceGame
             }
             catch (Exception ex)
             {
-                Console.WriteLine(""\n" +                
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "                                              " + "Invalid entry.");
+                Console.WriteLine("Invalid entry.");
             }
             return user;
         }
