@@ -67,10 +67,10 @@ namespace SpaceGame
                             ChangeLocation(ref user, ship);
                             break;
                         case 4:
-                            NewShip(ref user);
+                            ship = NewShip(ref user);
                             break;
                         case 5:
-                            Console.WriteLine("You chose to end the game.");
+                            Console.WriteLine("You chose to end the game.\n");
                             ShowStatus(user);
                             keepLooping = false;
                             break;
@@ -186,7 +186,8 @@ namespace SpaceGame
             int quantity = 0;
             Console.WriteLine("Select from the following uptions: \n" +
             "1. buy\n" +
-            "2. sell");
+            "2. sell\n" +
+            "\n >>> ");
             int tradeMode = int.Parse(Console.ReadLine().Trim());
             if (tradeMode == 1)
             {
@@ -196,19 +197,22 @@ namespace SpaceGame
                         Console.WriteLine("what would you like to buy? \n" +
                         $"1. {earthGoods[0]}\n" +
                         $"2. {earthGoods[1]}\n" +
-                        $"3. {earthGoods[2]}");
+                        $"3. {earthGoods[2]}\n" +
+                        "\n>>> ");
                         selection = int.Parse(Console.ReadLine().Trim());
                         break;
                     case "Alpha Centauri":
                         Console.WriteLine("what would you like to buy? \n" +
                         $"1. {acGoods[0]}\n" +
-                        $"2. {acGoods[1]}");
+                        $"2. {acGoods[1]}\n" +
+                        "\n>>> ");
                         selection = int.Parse(Console.ReadLine().Trim());
                         break;
                     case "Prextie":
                         Console.WriteLine("what would you like to buy? \n" +
                         $"1. {prextieGoods[0]}\n" +
-                        $"2. {prextieGoods[1]}\n");
+                        $"2. {prextieGoods[1]}\n" +
+                        "\n>>> ");
                         selection = int.Parse(Console.ReadLine().Trim());
                         break;
                 }
@@ -248,11 +252,13 @@ namespace SpaceGame
                 Console.WriteLine("What would you like to sell?\n" +
                     "1. Earth Goods\n" +
                     "2. Alpha Centauri Goods\n" +
-                    "3. Prextie Goods");
+                    "3. Prextie Goods\n" +
+                    "\n>>> ");
                 var goodsType = Console.ReadLine().Trim();
                 if (int.Parse(user[int.Parse(goodsType) + 4]) > 0)
                 {
-                    Console.WriteLine("How many units would you like to sell?");
+                    Console.WriteLine("How many units would you like to sell?\n" +
+                                      "\n>>> ");
                     int sellQuantity = int.Parse(Console.ReadLine().Trim());
                     if (sellQuantity <= int.Parse(user[int.Parse(goodsType) + 4]))
                     {
@@ -281,7 +287,6 @@ namespace SpaceGame
                 }
             }
         }
-
 
         // Displays information about user and currentShip
         private static void ShowStatus(string[] user)
