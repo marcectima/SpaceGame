@@ -330,7 +330,7 @@ namespace SpaceGame
                 distance = Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
 
                 // Calculates the elapsed time in years.
-                travelTime = distance / (Math.Pow(W, 10 / 3) + Math.Pow(10 - W, -11 / 3));
+                travelTime = distance / (Math.Pow(W, 10.0 / 3.0) + Math.Pow(10 - W, -11.0 / 3.0));
 
                 // Updates the user's travel time.
                 user[3] = Convert.ToString(double.Parse(user[3].Trim()) + travelTime);
@@ -350,14 +350,14 @@ namespace SpaceGame
             }
         }
 
-        // 
+        // Executes the trading decisions
         private static void Trade(ref string[] user, ref string[] ship)
         {
             string[] earthGoods = { "art", "wine", "literature" };
-            double[] eartPrices = { 1250.00, 750.00, 1499.99 };
+            double[] earthPrices = { 1250.00, 750.00, 1499.99 };
             string[] acGoods = { "dilithium crystals", "positronic brain" };
             double[] acPrices = { 3250.00, 3075.50 };
-            string[] prextieGoods = { "dark enetrgy shots", "black whole tickets" };
+            string[] prextieGoods = { "dark energy shots", "black whole tickets" };
             double[] prextiePrices = { 3499.99, 4999.99 };
             int selection = 0;
             int quantity = 0;
@@ -397,18 +397,23 @@ namespace SpaceGame
                     {
                         case "Earth":
                             // updates the user's wallet
-                            user[2] = Convert.ToString(double.Parse(user[2]) - eartPrices[selection - 1]);
+                            user[2] = Convert.ToString(double.Parse(user[2]) - earthPrices[selection - 1]);
+                            // update Earth goods' quantity
+                            user[5] = Convert.ToString(int.Parse(user[5]) + quantity);
                             break;
                         case "Alpha Centauri":
                             // updates the user's wallet
                             user[2] = Convert.ToString(double.Parse(user[2]) - acPrices[selection - 1]);
+                            // update Earth goods' quantity
+                            user[6] = Convert.ToString(int.Parse(user[6]) + quantity);
                             break;
                         case "Prextie":
                             // updates the user's wallet
                             user[2] = Convert.ToString(double.Parse(user[2]) - prextiePrices[selection - 1]);
+                            // update Earth goods' quantity
+                            user[7] = Convert.ToString(int.Parse(user[7]) + quantity);
                             break;
                     }
-                    user[5] = Convert.ToString(int.Parse(user[5]) + quantity);
                 }
                 else
                 {
@@ -417,15 +422,43 @@ namespace SpaceGame
             }
             else
             {
-                Console.WriteLine("How many units would you like to sell?");
-                int sellQuantity = int.Parse(Console.ReadLine().Trim());
-                user[5] = Convert.ToString(int.Parse(user[5]) - sellQuantity);
-
-                // updates the user's wallet
-                user[2] = Convert.ToString(double.Parse(user[2]) + 5000);
+                Console.WriteLine("What would you like to sell?\n" +
+                    "1. Earth Goods\n" +
+                    "2. Alpha Centauri Goods\n" +
+                    "3. Prextie Goods");
+                var goodsType = Console.ReadLine().Trim();
+                if (int.Parse(user[int.Parse(goodsType) + 4]) > 0)
+                {
+                    Console.WriteLine("How many units would you like to sell?");
+                    int sellQuantity = int.Parse(Console.ReadLine().Trim());
+                    if (sellQuantity <= int.Parse(user[int.Parse(goodsType) + 4]))
+                    {
+                        // Updates the user's cargo for the specified good
+                        user[int.Parse(goodsType) + 4] = Convert.ToString(int.Parse(user[5]) - sellQuantity);
+                        // updates the user's wallet
+                        if (user[4] == "Earth" && goodsType == "1")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity*500);
+                        else if (user[4] == "Earth" && goodsType == "2")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 4000);
+                        else if (user[4] == "Earth" && goodsType == "3")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 5000);
+                        else if (user[4] == "Alpha Centauri" && goodsType == "1")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
+                        else if (user[4] == "Alpha Centauri" && goodsType == "2")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
+                        else if (user[4] == "Alpha Centauri" && goodsType == "3")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 7000);
+                        else if (user[4] == "Prextie" && goodsType == "1")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
+                        else if (user[4] == "Prextie" && goodsType == "2")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 7000);
+                        else if (user[4] == "Prextie" && goodsType == "3")
+                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 3000);
+                    }
+                }
             }
-
         }
+
 
         // Displays information about user and currentShip
         private static void ShowStatus(string[] user)
@@ -481,15 +514,15 @@ namespace SpaceGame
             catch (Exception ex)
             {
                 Console.WriteLine("Invalid entry.");
-
             }
             return currentShip;
         }
 
-        // Creates a user. [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location, [5] - goods quantity
+        // Creates a user. [0] - name, [1] - gender, [2] - wallet, [3] - travel time, [4] - location, 
+        // [5] - Earth goods, [6] - Alpha Centauri Goods, [7] - Prextie Goods
         private static string[] CreateUser()
         {
-            string[] user = new string[6];
+            string[] user = new string[8];
             try
             {
                 Console.Write("\n Enter your character's name: ");
@@ -498,6 +531,8 @@ namespace SpaceGame
                 user[3] = "0";
                 user[4] = "Earth";
                 user[5] = "0";
+                user[6] = "0";
+                user[7] = "0";
             }
             catch (Exception ex)
             {
