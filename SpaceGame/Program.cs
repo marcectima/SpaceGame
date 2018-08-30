@@ -12,22 +12,23 @@ namespace SpaceGame
         {
             // Create the univers
             List<PlanetarySystem> universe = OperationGenesis();
-            Planet currentPlanet = universe[49].GetPlanets()[3]; 
+            Planet currentPlanet = universe[49].GetPlanets()[2]; 
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\nWelcome to Space Trader");
 
             // Creates a new user.
             Player myPlayer = CreateUser();
+            Console.Clear();
 
-            Console.WriteLine($"\n>>> Hello {myPlayer.GetName()}. Your character has been created and awarded with 15,000 credits to start the game.");
+            Console.WriteLine($"\nHello {myPlayer.GetName()}. Your character has been created and awarded with 15,000 credits to start the game.");
             Console.WriteLine("\nPress Enter to Continue");
             Console.ReadLine();
             Console.Clear();
 
             // Purchase the first ship.
             Ship myShip = CreateShip(myPlayer);
-
+            Refuel(myPlayer);
             Console.Clear();
 
             // Opens action menu. This is where the game runs.
@@ -131,15 +132,19 @@ namespace SpaceGame
 
             // 1 ton of fuel is spent to travel 1 lightyear, regardless of the ship's model
             maxRange = myPlayer.GetFuel();
-
             // loops through all planets and creates a list of all the reachable ones
             for (int i = 0; i < universe.Count(); i++)
             {
                 for (int j = 0; j < universe[i].GetPlanets().Count(); j++)
                 {
-                    if (GetDistance(currentPlanet.GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
-                    {
-                        reachablePlanets.Add(universe[i].GetPlanets()[j]);
+                    // Ensures that the current location is not listed
+                    if (universe[i].GetPlanets()[j].GetName() != currentPlanet.GetName())
+                    { 
+                        // Compares the distance of the next planet on the list to the maximum distance possible to travel with current fuel level
+                        if(GetDistance(currentPlanet.GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
+                        {
+                            reachablePlanets.Add(universe[i].GetPlanets()[j]);
+                        }
                     }
                 }
             }
@@ -394,6 +399,12 @@ namespace SpaceGame
                 universe.Add(new PlanetarySystem(systemName, numberOfPlanets, listOfPlanets[i]));
             }
             return universe;
+        }
+
+        private static void Refuel(Player myPlayer)
+        {
+            Console.Write("\nHow many tons of fuel do you wish to buy?\n\n>>> ");
+            FuelControl(myPlayer, double.Parse(Console.ReadLine()));
         }
 
         // Increase or decrease fuel level
