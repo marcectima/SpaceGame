@@ -30,12 +30,12 @@ namespace SpaceGame
 
             Console.Clear();
 
-            // Opens action menu.
+            // Opens action menu. This is where the game runs.
             ShowActionMenu(myPlayer, myShip, currentPlanet, universe);
             Environment.Exit(-1);
         }
         
-        // Action menu. This is where the game runs.
+        // Action menu
         private static void ShowActionMenu(Player myPlayer, Ship myShip, Planet currentPlanet, List<PlanetarySystem> universe )
         {
             bool keepLooping = true;
@@ -79,7 +79,7 @@ namespace SpaceGame
             } while (keepLooping);
         }
 
-        // Updates user location and travel time.
+        // Updates user location and travel time
         private static void Travel(Player myPlayer, Ship myShip, Planet currentPlanet, List<PlanetarySystem> universe)
         {
             double[] from = currentPlanet.GetCoordinates();
@@ -88,33 +88,74 @@ namespace SpaceGame
             double distance = 0;
             double travelTime = 0;
             double W = myShip.GetSpeed();
+            List<Planet> destinationList = new List<Planet>();
             try
             {
-                Console.WriteLine($"Where would you like to travel to:\n1. {universe}");
+                destinationList = ReachablePlanets(myPlayer, myShip, currentPlanet, universe);
 
-                // Calculates the distance between two destinations
-                distance = Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
+                string menuList = "";
+                for (int i = 0; i < destinationList.Count(); i++)
+                {
+                    menuList += $"\n{i+1}. {destinationList[i].GetName()}";
+                }
+                Console.WriteLine($"Where would you like to travel to:" + menuList);
 
-                // Calculates the elapsed time in years.
-                travelTime = distance / (Math.Pow(W, 10.0 / 3.0) + Math.Pow(10 - W, -11.0 / 3.0));
+                // Calculating the distance and time traveled
+                distance = GetDistance(from, to);
+                travelTime = GetTimeElapsed(distance, myShip.GetSpeed());
 
-                // Updates the user's travel time.
+                // Updates the user's travel time
                 myPlayer.SetTravelTime(travelTime);
 
-                // Checks to total time elapsed.
-                if (myPlayer.GetTravelTime() == 40 * 52560)
+                // Checks to total time elapsed
+                if (myPlayer.GetTravelTime() >= 40)
                 {
                     EndGameReport(myPlayer, myShip);
                     Environment.Exit(-1);
                 }
 
-                // Updates the user's location.
+                // Updates the user's location
                 myPlayer.SetLocation(whereTo);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        // Identifies the Planets within reach with the current fuel level 
+        private static List<Planet> ReachablePlanets(Player myPlayer, Ship myShip, Planet currentPlanet, List<PlanetarySystem> universe)
+        {
+            double maxRange = 0.0;
+            List<Planet> reachablePlanets = new List<Planet>();
+
+            // 1 ton of fuel is spent to travel 1 lightyear, regardless of the ship's model
+            maxRange = myPlayer.GetFuel();
+
+            // loops through all planets and creates a list of all the reachable ones
+            for (int i = 0; i < universe.Count(); i++)
+            {
+                for (int j = 0; j < universe[i].GetPlanets().Count(); j++)
+                {
+                    if (GetDistance(currentPlanet.GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
+                    {
+                        reachablePlanets.Add(universe[i].GetPlanets()[j]);
+                    }
+                }
+            }
+            return reachablePlanets;
+        }
+
+        // Calculates the distance between two planets in lightyears
+        private static double GetDistance(double[] from, double[] to)
+        {
+            return Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
+        }
+
+        // Calculates the time spent on each trip in years
+        private static double GetTimeElapsed(double distance, double W)
+        {
+            return distance / (Math.Pow(W, 10.0 / 3.0) + Math.Pow(10 - W, -11.0 / 3.0));
         }
 
         // Executes the trading decisions
