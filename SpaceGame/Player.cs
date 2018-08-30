@@ -42,6 +42,7 @@ namespace SpaceGame
         public void SetTravelTime(double travelTime) => this.travelTime += travelTime;
 
         public List<Goods> GetCargo() => this.cargo;
+        //public int GetCargoCount() => this.cargo.Count();
         public void AddCargo(Goods cargo) => this.cargo.Add(cargo);
         public void RemoveCargo(Goods cargo) => this.cargo.Remove(cargo);
 

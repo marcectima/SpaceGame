@@ -246,7 +246,7 @@ namespace SpaceGame
             Console.WriteLine($"wallet: {myPlayer.GetWallet()}");
             Console.WriteLine($"travel time: {myPlayer.GetTravelTime()}");
             Console.WriteLine($"location: {myPlayer.GetLocation()}");
-            Console.WriteLine($"cargo: {myPlayer.GetLocation()}");
+            Console.WriteLine($"cargo: {myPlayer.GetCargo().Count()}");
             Console.WriteLine($"fuel: {myShip.GetTankCapacity()}");
         }
 
@@ -337,7 +337,7 @@ namespace SpaceGame
             return new Player(playerName, gender, location, wallet, travelTime);
         }
 
-        // Generates the Universe
+        // Creates the Universe
         private static Planet OperationGenesis()
         {
             string systemName = "";
