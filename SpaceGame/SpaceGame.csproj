@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B69F3E43-27E0-449C-BF0E-4DC2BDEB69CA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleApp22</RootNamespace>
-    <AssemblyName>ConsoleApp22</AssemblyName>
+    <RootNamespace>SpaceGame</RootNamespace>
+    <AssemblyName>SpaceGame</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,8 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model.cs" />
+    <Compile Include="Planet.cs" />
+    <Compile Include="PlanetarySystem.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ship.cs" />
+    <Compile Include="Goods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
