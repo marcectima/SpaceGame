@@ -11,7 +11,8 @@ namespace SpaceGame
         static void Main(string[] args)
         {
             // Create the univers
-            Planet currentPlanet = OperationGenesis();
+            List<PlanetarySystem> universe = OperationGenesis();
+            Planet currentPlanet = universe[49].GetPlanets()[3]; 
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\nWelcome to Space Trader");
@@ -30,12 +31,12 @@ namespace SpaceGame
             Console.Clear();
 
             // Opens action menu.
-            ShowActionMenu(myPlayer, myShip, currentPlanet);
+            ShowActionMenu(myPlayer, myShip, currentPlanet, universe);
             Environment.Exit(-1);
         }
         
         // Action menu. This is where the game runs.
-        private static void ShowActionMenu(Player myPlayer, Ship myShip, Planet currentPlanet)
+        private static void ShowActionMenu(Player myPlayer, Ship myShip, Planet currentPlanet, List<PlanetarySystem> universe )
         {
             bool keepLooping = true;
             do
@@ -53,7 +54,7 @@ namespace SpaceGame
                             Trade(myPlayer, myShip, currentPlanet);
                             break;
                         case 3:
-                            ChangeLocation(myPlayer, myShip);
+                            Travel(myPlayer, myShip, currentPlanet, universe);
                             break;
                         case 4:
                             myShip = CreateShip(myPlayer);
@@ -79,13 +80,9 @@ namespace SpaceGame
         }
 
         // Updates user location and travel time.
-        private static void ChangeLocation(Player myPlayer, Ship myShip)
+        private static void Travel(Player myPlayer, Ship myShip, Planet currentPlanet, List<PlanetarySystem> universe)
         {
-            string[] destinations = { "Earth", "Alpha Centauri", "Prextie" };
-            double[] Earth = { 0, 0 };
-            double[] AlphaCentauri = { 0, -4.367 };
-            double[] Prextie = { -4.6, 5.0 };
-            double[] from = new double[2];
+            double[] from = currentPlanet.GetCoordinates();
             double[] to = new double[2];
             string whereTo = "";
             double distance = 0;
@@ -93,51 +90,8 @@ namespace SpaceGame
             double W = myShip.GetSpeed();
             try
             {
-                do
-                {
-                    switch (myPlayer.GetLocation())
-                    {
-                        case "Earth":
-                            from = Earth;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[1]}\n" +
-                            $"2. {destinations[2]}");
-                            string selection1 = Console.ReadLine().Trim();
-                            if (selection1 == "1") { whereTo = destinations[1]; }
-                            else if (selection1 == "2") { whereTo = destinations[2]; }
-                            break;
-                        case "Alpha Centauri":
-                            from = AlphaCentauri;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[0]}\n" +
-                            $"2. {destinations[2]}");
-                            string selection2 = Console.ReadLine().Trim();
-                            if (selection2 == "1") { whereTo = destinations[0]; }
-                            else if (selection2 == "2") { whereTo = destinations[2]; }
-                            break;
-                        case "Prextie":
-                            from = Prextie;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[0]}\n" +
-                            $"2. {destinations[1]}");
-                            string selection3 = Console.ReadLine().Trim();
-                            if (selection3 == "1") { whereTo = destinations[0]; }
-                            else if (selection3 == "2") { whereTo = destinations[1]; }
-                            break;
-                    }
-                } while (whereTo == "");
-                switch (whereTo)
-                {
-                    case "Earth":
-                        to = Earth;
-                        break;
-                    case "Alpha Centauri":
-                        to = AlphaCentauri;
-                        break;
-                    case "Prextie":
-                        to = Prextie;
-                        break;
-                }
+                Console.WriteLine($"Where would you like to travel to:\n1. {universe}");
+
                 // Calculates the distance between two destinations
                 distance = Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
 
@@ -246,8 +200,7 @@ namespace SpaceGame
             Console.WriteLine($"wallet: {myPlayer.GetWallet()}");
             Console.WriteLine($"travel time: {myPlayer.GetTravelTime()}");
             Console.WriteLine($"location: {myPlayer.GetLocation()}");
-            Console.WriteLine($"cargo: {myPlayer.GetCargo().Count()}");
-            Console.WriteLine($"fuel: {myShip.GetTankCapacity()}");
+            Console.WriteLine($"fuel: {myPlayer.GetFuel()}");
         }
 
         // Purchasing a ship
@@ -260,7 +213,7 @@ namespace SpaceGame
             {
                 // prompts the user to select a ship
                 Console.Write("Select the type of ship you want to purchase:\n1. Shuttlecraft\n2. Freighter\n3. Cruise Freighter\n4. Starship\n\n>>> ");
-                model = modelNames[int.Parse(Console.ReadLine().Trim())];
+                model = modelNames[int.Parse(Console.ReadLine().Trim()) - 1 ];
             }
             catch (Exception ex)
             {
@@ -338,7 +291,7 @@ namespace SpaceGame
         }
 
         // Creates the Universe
-        private static Planet OperationGenesis()
+        private static List<PlanetarySystem> OperationGenesis()
         {
             string systemName = "";
             string planetName = "";
@@ -399,7 +352,13 @@ namespace SpaceGame
                 // adds the created planetary system to the universe
                 universe.Add(new PlanetarySystem(systemName, numberOfPlanets, listOfPlanets[i]));
             }
-            return universe[49].GetPlanets()[3];
+            return universe;
+        }
+
+        // Increase or decrease fuel level
+        private static void FuelControl(Player myPlayer, double fuel)
+        {
+            myPlayer.SetFuel(fuel);
         }
 
         // Generates trading goods

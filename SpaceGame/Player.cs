@@ -15,6 +15,7 @@ namespace SpaceGame
             this.location = location;
             this.wallet = wallet;
             this.travelTime = travelTime;
+            this.fuel = 0.0;
         }
 
         private string name;
@@ -22,6 +23,7 @@ namespace SpaceGame
         private string location;
         private double wallet;
         private double travelTime;
+        private double fuel;
         private List<Goods> cargo;
 
         // private Ship ship;
@@ -41,8 +43,11 @@ namespace SpaceGame
         public double GetTravelTime() => this.travelTime;
         public void SetTravelTime(double travelTime) => this.travelTime += travelTime;
 
+        public double GetFuel() => this.fuel;
+        public void SetFuel(double fuel) => this.fuel += fuel; 
+
         public List<Goods> GetCargo() => this.cargo;
-        //public int GetCargoCount() => this.cargo.Count();
+        public int GetCargoCount() => this.cargo.Count();
         public void AddCargo(Goods cargo) => this.cargo.Add(cargo);
         public void RemoveCargo(Goods cargo) => this.cargo.Remove(cargo);
 
