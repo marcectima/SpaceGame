@@ -401,6 +401,7 @@ namespace SpaceGame
             return universe;
         }
 
+        // Allows the user to buy fuel
         private static void Refuel(Player myPlayer)
         {
             Console.Write("\nHow many tons of fuel do you wish to buy?\n\n>>> ");
