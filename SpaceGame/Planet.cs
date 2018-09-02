@@ -20,7 +20,12 @@ namespace SpaceGame
         private double multiplier;
 
         public string GetName() => this.name;
+        public void SetName(string name) => this.name = name;
+
         public double[] GetCoordinates() => this.coordinates;
+        public void SetCoordinates(double[] coordinates) => this.coordinates = coordinates;
+
         public double GetMultiplier() => this.multiplier;
+        public void SetMultiplier(double multiplier) => this.multiplier = multiplier;
     }
 }
