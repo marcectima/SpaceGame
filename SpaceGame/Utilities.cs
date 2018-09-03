@@ -135,5 +135,22 @@ namespace SpaceGame
                   "\n                                                                       ");
         }
 
+        // Creates Trade Menu Lists
+        public static string[] CreateTradeMenus(Goods[] tradingGoods)
+        {
+            // Building the output strings for buy and sell menues
+            string itemList = "";
+            int count = 1;
+            foreach (Goods good in tradingGoods)
+            {
+                itemList += count++ + ". " + good.GetName() + "\n";
+                if (count == 10)
+                {
+                    itemList += "\n>>> ";
+                }
+            }
+            string[] tradeMenu = { "\nWhat would you like to buy? \n" + itemList, "\nWhat would you like to sell? \n" + itemList };
+            return tradeMenu;
+        }
     }
 }

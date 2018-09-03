@@ -22,12 +22,12 @@ namespace SpaceGame
             Player myPlayer = new Player();
             Console.Clear();
             // Opens action menu. This is where the game runs.
-            ShowActionMenu(myPlayer, universe, tradingGoods);
+            ShowActionMenu(myPlayer, universe, tradingGoods, TradeMenu);
             Environment.Exit(-1);
         }
 
         // Action menu
-        private static void ShowActionMenu(Player myPlayer, List<PlanetarySystem> universe, Goods[] tradingGoods)
+        private static void ShowActionMenu(Player myPlayer, List<PlanetarySystem> universe, Goods[] tradingGoods, string[] TradeMenu)
         {
             bool keepLooping = true;
             do
@@ -47,7 +47,7 @@ namespace SpaceGame
                                     myPlayer.ShowStatus(myPlayer);
                                     break;
                                 case 2:
-                                    Trade(tradingGoods, myPlayer);
+                                    Trade(tradingGoods, myPlayer, TradeMenu);
                                     break;
                                 case 3:
                                     Travel(myPlayer, universe);
@@ -168,8 +168,8 @@ namespace SpaceGame
                 if (count > 0)
                 {
                     Console.WriteLine("How many units would you like to sell?\n\n>>> ");
-                    int sellQuantity = int.Parse(Console.ReadLine().Trim());
-                    if (sellQuantity <= count)
+                    MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
+                    if (quantity.GetSelection() <= count)
                     {
                         // removes the sold item from the user's cargo
                         myPlayer.RemoveCargo(tradingGoods[selection.GetSelection()]);
