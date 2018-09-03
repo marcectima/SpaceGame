@@ -35,7 +35,6 @@ namespace SpaceGame
                     Console.WriteLine(ex.Message);
                 }
             } while (keepLooping);
-
             // enter user's gender
             keepLooping = true;
             do
@@ -62,30 +61,23 @@ namespace SpaceGame
                     Console.WriteLine(ex.Message);
                 }
             } while (keepLooping);
-
             // mark starting point as Earth
             double[] startingPoint = { 0.0, 0.0 };
             this.location = new Planet("Earth", startingPoint, 1);
-
             // give starting credits to the player
             this.wallet = 15000;
-
             // Set travel time to zero at the beginning of the game
             this.travelTime = 0;
-
             Console.WriteLine($"\nHello {this.GetName()}. Your character has been created and awarded with 15,000 credits to start the game.");
             Console.WriteLine("\nPress Enter to Continue");
             Console.ReadLine();
             Console.Clear();
-
             // prompt the user to purchase a ship
             this.ship = newShip(true);
             Console.Clear();
-
             // Updates user's wallet.
             SetWallet(-ship.GetPrice());
             Console.Clear();
-
             Refuel(true);
             Console.Clear();
         }

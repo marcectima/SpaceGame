@@ -10,19 +10,17 @@ namespace SpaceGame
     {
         static void Main(string[] args)
         {
+            // Setting the conolse text color to green
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             // Create the univers
             List<PlanetarySystem> universe = Utilities.OperationGenesis();
-
             // Creates trading goods.
             Goods[] tradingGoods = Utilities.CreateTradingGoods();
-
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            string[] TradeMenu = Utilities.CreateTradeMenus(tradingGoods);
             Console.WriteLine("\nWelcome to Space Trader");
-
             // Creates a new user.
             Player myPlayer = new Player();
             Console.Clear();
-
             // Opens action menu. This is where the game runs.
             ShowActionMenu(myPlayer, universe, tradingGoods);
             Environment.Exit(-1);
@@ -39,7 +37,7 @@ namespace SpaceGame
                 {
                     try
                     {
-                        Console.Write("Select from the following options:\n1. Status\n2. Trade\n3. Travel to...\n4. Refuel\n5. Change ship\n6. Quit game\n\n>>> ");
+                        Console.Write("\nSelect from the following options:\n\n1. Status\n2. Trade\n3. Travel to...\n4. Refuel\n5. Change ship\n6. Quit game\n\n>>> ");
                         MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
                         if (Enumerable.Range(1, 6).Contains(selection.GetSelection()))
                         {
@@ -79,12 +77,11 @@ namespace SpaceGame
                         Console.WriteLine(ex.Message);
                     }
                 } while (commandNotExecuted);
-                Console.WriteLine("\nCommand successfully executed.\nPress Enter to Continue");
+                Console.WriteLine("\nCommand successfully executed. Press Enter to Continue.");
                 Console.ReadLine();
                 Console.Clear();
             } while (keepLooping);
         }
-
 
         // Identifies the Planets within reach with the current fuel level 
         private static List<Planet> ReachablePlanets(Player myPlayer, List<PlanetarySystem> universe)
@@ -126,74 +123,59 @@ namespace SpaceGame
         }
 
         // Executes the trading decisions
-        private static void Trade(Goods[] tradingGoods, Player myPlayer)
+        private static void Trade(Goods[] tradingGoods, Player myPlayer, string[] TradeMenu)
         {
-            int selection = 0;
-            int quantity = 0;
-
-            // Building the output strings for buy and sell menues
-            string itemList = "";
-            int count = 1;
-            foreach (Goods good in tradingGoods)
-            {
-                itemList += count++ + ". " + good.GetName() + "\n";
-                if (count == 10)
-                {
-                    itemList += "\n >>> ";
-                }
-            }
-            string buyMenu = "What would you like to buy? \n" + itemList;
-            string sellMenu = "What would you like to sell? \n" + itemList;
-
-            Console.WriteLine("Select from the following options: \n1. buy\n2. sell\n\n >>> ");
-            int tradeMode = int.Parse(Console.ReadLine().Trim());
-            if (tradeMode == 1)
+            string buyMenu = TradeMenu[0];
+            string sellMenu = TradeMenu[1];
+            Console.Write("\nSelect from the following options:\n\n1. buy\n2. sell\n\n>>> ");
+            MenuSelection tradeMode = new MenuSelection(Console.ReadLine().Trim());
+            if (tradeMode.GetSelection() == 1)
             {
                 Console.WriteLine(buyMenu);
-                selection = int.Parse(Console.ReadLine().Trim());
+                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
 
                 Console.WriteLine("How many units would you like to buy?");
-                quantity = int.Parse(Console.ReadLine().Trim());
+                MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
 
                 // Checks if there is enough room in the ship's cargo bay 
-                if (myPlayer.GetCargo().Count() + quantity <= myPlayer.GetShip().GetCargoCapacity())
+                if (myPlayer.GetCargo().Count() + quantity.GetSelection() <= myPlayer.GetShip().GetCargoCapacity())
                 {
                     // Adds an item to the player's cargo
-                    myPlayer.AddCargo(tradingGoods[selection]);
+                    myPlayer.AddCargo(tradingGoods[selection.GetSelection()]);
 
                     // Updates the user's wallet 
-                    myPlayer.SetWallet(-tradingGoods[selection].GetPrice() * myPlayer.GetLocation().GetMultiplier());
+                    myPlayer.SetWallet(-tradingGoods[selection.GetSelection()].GetPrice() * myPlayer.GetLocation().GetMultiplier());
                 }
                 else
                 {
                     Console.WriteLine("The ship's cargo is full.");
                 }
             }
-            else if (tradeMode == 2)
+            else if (tradeMode.GetSelection() == 2)
             {
                 Console.WriteLine(sellMenu);
-                selection = int.Parse(Console.ReadLine().Trim());
+                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
 
                 // Counts how many of selected items does the user have in his cargo
-                int countGoodsInCargo = 0;
+                int count = 0;
                 foreach (Goods good in myPlayer.GetCargo())
                 {
-                    if (good.GetName() == tradingGoods[selection].GetName())
+                    if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
                     {
                         count++;
                     }
                 }
-                if (countGoodsInCargo > 0)
+                if (count > 0)
                 {
                     Console.WriteLine("How many units would you like to sell?\n\n>>> ");
                     int sellQuantity = int.Parse(Console.ReadLine().Trim());
-                    if (sellQuantity <= countGoodsInCargo)
+                    if (sellQuantity <= count)
                     {
                         // removes the sold item from the user's cargo
-                        myPlayer.RemoveCargo(tradingGoods[selection]);
+                        myPlayer.RemoveCargo(tradingGoods[selection.GetSelection()]);
 
                         // Updates the user's wallet. 10% sales tax is added.
-                        myPlayer.SetWallet(tradingGoods[selection].GetPrice() * myPlayer.GetLocation().GetMultiplier() * 1.1);
+                        myPlayer.SetWallet(tradingGoods[selection.GetSelection()].GetPrice() * myPlayer.GetLocation().GetMultiplier() * 1.1);
                     }
                 }
             }
