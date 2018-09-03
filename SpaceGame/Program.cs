@@ -23,13 +23,6 @@ namespace SpaceGame
             Player myPlayer = new Player();
             Console.Clear();
 
-            Console.WriteLine($"\nHello {myPlayer.GetName()}. Your character has been created and awarded with 15,000 credits to start the game.");
-            Console.WriteLine("\nPress Enter to Continue");
-            Console.ReadLine();
-            Console.Clear();
-
-
-
             // Opens action menu. This is where the game runs.
             ShowActionMenu(myPlayer, universe, tradingGoods);
             Environment.Exit(-1);

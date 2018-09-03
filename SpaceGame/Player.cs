@@ -44,10 +44,10 @@ namespace SpaceGame
                 {
                     string[] genderArray = { "Male", "Female" };
                     Console.Write($"\nSelect your gender, {this.name}:\n1. {genderArray[0]}\n2. {genderArray[1]}\n\n>>> ");
-                    int selection = int.Parse(Console.ReadLine().Trim());
-                    if (Enumerable.Range(1,2).Contains(selection))
+                    MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                    if (Enumerable.Range(1, 2).Contains(selection.GetSelection()))
                     {
-                        this.gender = genderArray[selection -1];
+                        this.gender = genderArray[selection.GetSelection() - 1];
                         keepLooping = false;
                         Console.Clear();
                     }
@@ -73,6 +73,11 @@ namespace SpaceGame
             // Set travel time to zero at the beginning of the game
             this.travelTime = 0;
 
+            Console.WriteLine($"\nHello {this.GetName()}. Your character has been created and awarded with 15,000 credits to start the game.");
+            Console.WriteLine("\nPress Enter to Continue");
+            Console.ReadLine();
+            Console.Clear();
+
             // prompt the user to purchase a ship
             this.ship = newShip(true);
 
@@ -80,7 +85,7 @@ namespace SpaceGame
             SetWallet(-ship.GetPrice());
             Console.Clear();
 
-            Refuel();
+            Refuel(true);
         }
 
         private string name;
@@ -125,15 +130,29 @@ namespace SpaceGame
             {
                 try
                 {
+                    Console.WriteLine($"\nWallet: {this.GetWallet()} credits");
 
                     string[] modelNames = { "Shuttlecraft", "Freighter", "Cruise Freighter", "Starship" };
-                    Console.Write($"\nSelect the type of ship you want to purchase, {this.name}:\n1. {modelNames[0]}\n2. {modelNames[1]}\n3. {modelNames[2]}\n4. {modelNames[3]}\n\n>>> ");
-                    int selection = int.Parse(Console.ReadLine().Trim());
-                    if (Enumerable.Range(1, 4).Contains(selection))
+                    Console.Write($"\nSelect the type of ship you want to purchase, {this.name}:\n" +
+                        $"\n1. {modelNames[0]}\t\t10,000 credits" +
+                        $"\n2. {modelNames[1]}\t\t25,000 credits" +
+                        $"\n3. {modelNames[2]}\t50,000 credits" +
+                        $"\n4. {modelNames[3]}\t\t100,000 credits\n\n>>> ");
+                    MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                    if (Enumerable.Range(1, 4).Contains(selection.GetSelection()))
                     {
-                        model = modelNames[selection - 1];
-                        keepLooping = false;
-                        Console.Clear();
+                        model = modelNames[selection.GetSelection() - 1];
+                        Ship newShip = new Ship(model);
+                        if (this.GetWallet() >= newShip.GetPrice())
+                        {
+                            keepLooping = false;
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            throw new Exception("\nYou don't have enough credits to purchase the selected model.");
+                        }
                     }
                     else
                     {
@@ -150,10 +169,35 @@ namespace SpaceGame
         }
 
         // Allows the user to buy fuel
-        public void Refuel()
+        public void Refuel(bool keepLooping)
         {
-            Console.Write("\nHow many tons of fuel do you wish to buy?\n\n>>> ");
-            SetFuel(Double.Parse(Console.ReadLine().Trim()));
+            do
+            {
+                try
+                {
+                    double tank = this.GetShip().GetTankCapacity();
+                    double fuelLevel = this.GetFuel();
+                    Console.WriteLine($"\nYour ship's tank capacity is {tank}.");
+                    Console.WriteLine($"Your current fuel level is: {fuelLevel}.");
+                    Console.Write("How many tons of fuel do you wish to buy?\n\n>>> ");
+                    double selection = double.Parse(Console.ReadLine());
+                    if (selection >= 0 && selection <= tank - fuelLevel)
+                    {
+                        SetFuel(selection);
+                        Console.Clear();
+                        keepLooping = false;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        throw new Exception("\nInvalid Entry");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (keepLooping);
         }
 
         // Displays information about user and currentShip

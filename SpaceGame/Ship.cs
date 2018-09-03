@@ -10,7 +10,7 @@ namespace SpaceGame
     {
         public Ship(string model)
         {
-            if (modelName == "Shuttlecraft")
+            if (model == "Shuttlecraft")
             {
                 this.modelName = model;
                 this.price = 10000;
@@ -18,7 +18,7 @@ namespace SpaceGame
                 this.cargoCapacity = 100;
                 this.tankCapacity = 10;
             }
-            else if (modelName == "Freighter")
+            else if (model == "Freighter")
             {
                 this.modelName = model;
                 this.price = 25000;
@@ -26,7 +26,7 @@ namespace SpaceGame
                 this.cargoCapacity = 300;
                 this.tankCapacity = 15;
             }
-            else if (modelName == "Cruise Freighter")
+            else if (model == "Cruise Freighter")
             {
                 this.modelName = model;
                 this.price = 50000;
@@ -34,7 +34,7 @@ namespace SpaceGame
                 this.cargoCapacity = 700;
                 this.tankCapacity = 20;
             }
-            else if (modelName == "Starship")
+            else if (model == "Starship")
             {
                 this.modelName = model;
                 this.price = 100000;

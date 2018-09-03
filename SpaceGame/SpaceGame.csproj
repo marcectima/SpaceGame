@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MenuSelection.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="PlanetarySystem.cs" />
     <Compile Include="Player.cs" />
