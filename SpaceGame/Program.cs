@@ -12,17 +12,24 @@ namespace SpaceGame
         {
             // Setting the conolse text color to green
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            // Create the univers
+
+            // Creating the univers
             List<PlanetarySystem> universe = Utilities.OperationGenesis();
-            // Creates trading goods.
+
+            // Creating trading goods and trade menus
             Goods[] tradingGoods = Utilities.CreateTradingGoods();
             string[] TradeMenu = Utilities.CreateTradeMenus(tradingGoods);
+
             Console.WriteLine("\nWelcome to Space Trader");
-            // Creates a new user.
+
+            // Creating a new user.
             Player myPlayer = new Player();
             Console.Clear();
+
             // Opens action menu. This is where the game runs.
             ShowActionMenu(myPlayer, universe, tradingGoods, TradeMenu);
+
+            // Quits the Game
             Environment.Exit(-1);
         }
 
