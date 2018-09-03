@@ -55,7 +55,7 @@ namespace SpaceGame
                                     break;
                                 case 2:
                                     Console.Clear();
-                                    myPlayer.Trade(tradingGoods, myPlayer, TradeMenu);
+                                    Trade(tradingGoods, myPlayer, TradeMenu);
                                     break;
                                 case 3:
                                     myPlayer.Travel(myPlayer, universe);
@@ -88,6 +88,40 @@ namespace SpaceGame
                 Console.WriteLine("\nCommand successfully executed. Press Enter to Continue.");
                 Console.ReadLine();
                 Console.Clear();
+            } while (keepLooping);
+        }
+
+        // Executes the trading decisions
+        private static void Trade(Goods[] tradingGoods, Player myPlayer, string[] TradeMenu)
+        {
+            string buyMenu = TradeMenu[0];
+            string sellMenu = TradeMenu[1];
+            bool keepLooping = true;
+            do
+            {
+                Console.Write("\nSelect from the following options:\n\n1. buy\n2. sell\n\n>>> ");
+                MenuSelection tradeMode = new MenuSelection(Console.ReadLine().Trim());
+                try
+                {
+                    if (tradeMode.GetSelection() == 1)
+                    {
+                        myPlayer.BuyGoods(buyMenu, tradingGoods);
+                    }
+                    else if (tradeMode.GetSelection() == 2)
+                    {
+                        myPlayer.SellGoods(sellMenu, tradingGoods);
+                    }
+                    else
+                    {
+                        throw new Exception("\nInvalid Entry");
+                    }
+                    keepLooping = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine(ex.Message);
+                }
             } while (keepLooping);
         }
     }

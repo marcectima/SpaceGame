@@ -92,49 +92,6 @@ namespace SpaceGame
             return arrayOfGoods;
         }
 
-        // Displays the endgame stats.
-        public static void EndGameReport(Player myPlayer)
-        {
-            myPlayer.ShowStatus(myPlayer);
-            Console.WriteLine("\nYour Journey is over. ");
-            Console.WriteLine($"You started the game with 15000 credits and ended with {myPlayer.GetWallet()}." +
-                              $"\nYou are leaving the game with an overall profit of {myPlayer.GetWallet() - 15000}." +
-                              $"\nYour overall travel time in the universe is {myPlayer.GetTravelTime()} years." +
-                              $"\n\nBest of luck to you in real life.");
-            Console.WriteLine("                                                             " +
-                  "\n                                                                       " +
-                  "\n                                                                       " +
-                  "\n                                                                       " +
-                  "\n                  \"Live long and prosper\"                            " +
-                  "\n                                                                       " +
-                  "\n                                                                       " +
-                  "\n             __                        ___                             " +
-                  "\n           /    \\                    /    \\                          " +
-                  "\n          |      \\                  /      |___                       " +
-                  "\n         __\\      \\                /       /    \\                   " +
-                  "\n       /    \\      \\              /       /      |                   " +
-                  "\n      |      \\      \\            /       /       /                   " +
-                  "\n       \\      \\      \\          /       /       /                   " +
-                  "\n        \\      \\      \\        /       /       /                    " +
-                  "\n         \\      \\      \\      /       /       /                     " +
-                  "\n          \\      \\      \\    /       /       /                      " +
-                  "\n           \\      \\      \\__/       /       /                       " +
-                  "\n            \\      \\               /       /                         " +
-                  "\n             \\      \\             /       /               __         " +
-                  "\n              \\                          |           ___/   \\        " +
-                  "\n              |                         |       ___/        |          " +
-                  "\n              |                          \\____/          __/          " +
-                  "\n              |                                       __/              " +
-                  "\n              |                                   ___/                 " +
-                  "\n              |                                __/                     " +
-                  "\n              \\                             __/                       " +
-                  "\n               \\                         __/                          " +
-                  "\n                \\                     __/                             " +
-                  "\n                 |                   /                                 " +
-                  "\n                                                                       " +
-                  "\n                                                                       ");
-        }
-
         // Creates Trade Menu Lists
         public static string[] CreateTradeMenus(Goods[] tradingGoods)
         {
@@ -152,6 +109,17 @@ namespace SpaceGame
             }
             string[] tradeMenu = { "\nWhat would you like to buy?\n\n" + itemList, "\nWhat would you like to sell?\n\n" + itemList };
             return tradeMenu;
+        }
+
+        // Displays the endgame stats.
+        public static void EndGameReport(Player myPlayer)
+        {
+            myPlayer.ShowStatus(myPlayer);
+            Console.WriteLine("\nYour Journey is over. ");
+            Console.WriteLine($"You started the game with 15000 credits and ended with {myPlayer.GetWallet()}." +
+                              $"\nYou are leaving the game with an overall profit of {myPlayer.GetWallet() - 15000}." +
+                              $"\nYour overall travel time in the universe is {myPlayer.GetTravelTime()} years." +
+                              $"\n\nBest of luck to you in real life.");
         }
     }
 }
