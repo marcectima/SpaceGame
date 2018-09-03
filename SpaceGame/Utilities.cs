@@ -79,15 +79,15 @@ namespace SpaceGame
             Goods[] arrayOfGoods = new Goods[10];
             {
                 arrayOfGoods[0] = new Goods("silver", 249.99, 10);
-                arrayOfGoods[0] = new Goods("Palladium", 499.99, 9);
-                arrayOfGoods[0] = new Goods("Iridium", 749.99, 8);
-                arrayOfGoods[0] = new Goods("gold", 999.99, 7);
-                arrayOfGoods[0] = new Goods("Platinum", 1449.99, 6);
-                arrayOfGoods[0] = new Goods("diamonds", 2249.99, 5);
-                arrayOfGoods[0] = new Goods("Painite", 2999.99, 4);
-                arrayOfGoods[0] = new Goods("Rhodium", 4499.99, 3);
-                arrayOfGoods[0] = new Goods("Dilithium Crystals", 7249.99, 2);
-                arrayOfGoods[0] = new Goods("Neutronium", 9999.99, 1);
+                arrayOfGoods[1] = new Goods("Palladium", 499.99, 9);
+                arrayOfGoods[2] = new Goods("Iridium", 749.99, 8);
+                arrayOfGoods[3] = new Goods("gold", 999.99, 7);
+                arrayOfGoods[4] = new Goods("Platinum", 1449.99, 6);
+                arrayOfGoods[5] = new Goods("diamonds", 2249.99, 5);
+                arrayOfGoods[6] = new Goods("Painite", 2999.99, 4);
+                arrayOfGoods[7] = new Goods("Rhodium", 4499.99, 3);
+                arrayOfGoods[8] = new Goods("Dilithium Crystals", 7249.99, 2);
+                arrayOfGoods[9] = new Goods("Neutronium", 9999.99, 1);
             }
             return arrayOfGoods;
         }

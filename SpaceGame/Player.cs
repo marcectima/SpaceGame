@@ -80,12 +80,14 @@ namespace SpaceGame
 
             // prompt the user to purchase a ship
             this.ship = newShip(true);
+            Console.Clear();
 
             // Updates user's wallet.
             SetWallet(-ship.GetPrice());
             Console.Clear();
 
             Refuel(true);
+            Console.Clear();
         }
 
         private string name;
@@ -146,7 +148,6 @@ namespace SpaceGame
                         if (this.GetWallet() >= newShip.GetPrice())
                         {
                             keepLooping = false;
-                            Console.Clear();
                         }
                         else
                         {
@@ -171,21 +172,31 @@ namespace SpaceGame
         // Allows the user to buy fuel
         public void Refuel(bool keepLooping)
         {
+            // Adjusts the fuel price based on the planet the user is currently on
+            double fuelPrice = 100 * this.location.GetMultiplier();
+
             do
             {
                 try
                 {
                     double tank = this.GetShip().GetTankCapacity();
                     double fuelLevel = this.GetFuel();
-                    Console.WriteLine($"\nYour ship's tank capacity is {tank}.");
-                    Console.WriteLine($"Your current fuel level is: {fuelLevel}.");
-                    Console.Write("How many tons of fuel do you wish to buy?\n\n>>> ");
+                    Console.WriteLine($"\nFuel Level:\t\t{fuelLevel} tons" +
+                                      $"\nTank Capacity:\t\t{tank} tons" +
+                                      $"\nFuel Price:\t\t{fuelPrice} credits per ton");
+                    Console.Write("\nHow many tons of fuel do you wish to buy?\n\n>>> ");
                     double selection = double.Parse(Console.ReadLine());
                     if (selection >= 0 && selection <= tank - fuelLevel)
                     {
-                        SetFuel(selection);
-                        Console.Clear();
-                        keepLooping = false;
+                        if (this.GetWallet() >= selection * fuelPrice)
+                        {
+                            SetFuel(selection);
+                            keepLooping = false;
+                        }
+                        else
+                        {
+                            throw new Exception("\nYou don't have enough credits to buy that much fuel. Enter a smaller amount.");
+                        }
                     }
                     else
                     {
@@ -203,10 +214,7 @@ namespace SpaceGame
         // Displays information about user and currentShip
         public void ShowStatus(Player myPlayer)
         {
-            Console.WriteLine($"wallet: {myPlayer.GetWallet()}");
-            Console.WriteLine($"travel time: {myPlayer.GetTravelTime()}");
-            Console.WriteLine($"location: {myPlayer.GetLocation()}");
-            Console.WriteLine($"fuel: {myPlayer.GetFuel()}");
+            Console.WriteLine($"\nwallet: {myPlayer.GetWallet()}\ntravel time: {myPlayer.GetTravelTime()}\nlocation: {myPlayer.GetLocation()}\nfuel: {myPlayer.GetFuel()}");
         }
 
     }

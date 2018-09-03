@@ -34,41 +34,54 @@ namespace SpaceGame
             bool keepLooping = true;
             do
             {
-                try
+                bool commandNotExecuted = true;
+                do
                 {
-                    Console.Write("Select from the following options:\n1. Status\n2. Trade\n3. Travel to...\n4. Change ship\n5. Quit game\n\n>>> ");
-                    int selection = int.Parse(Console.ReadLine());
-                    switch (selection)
+                    try
                     {
-                        case 1:
-                            myPlayer.ShowStatus(myPlayer);
-                            break;
-                        case 2:
-                            Trade(tradingGoods, myPlayer);
-                            break;
-                        case 3:
-                            Travel(myPlayer, universe);
-                            break;
-                        case 4:
-                            myPlayer.newShip(true);
-                            break;
-                        case 5:
-                            Console.WriteLine("You chose to end the game.\n");
-                            Utilities.EndGameReport(myPlayer);
-                            keepLooping = false;
-                            break;
+                        Console.Write("Select from the following options:\n1. Status\n2. Trade\n3. Travel to...\n4. Refuel\n5. Change ship\n6. Quit game\n\n>>> ");
+                        MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                        if (Enumerable.Range(1, 6).Contains(selection.GetSelection()))
+                        {
+                            switch (selection.GetSelection())
+                            {
+                                case 1:
+                                    myPlayer.ShowStatus(myPlayer);
+                                    break;
+                                case 2:
+                                    Trade(tradingGoods, myPlayer);
+                                    break;
+                                case 3:
+                                    Travel(myPlayer, universe);
+                                    break;
+                                case 4:
+                                    myPlayer.Refuel(true);
+                                    break;
+                                case 5:
+                                    myPlayer.newShip(true);
+                                    break;
+                                case 6:
+                                    Console.WriteLine("You chose to end the game.\n");
+                                    Utilities.EndGameReport(myPlayer);
+                                    keepLooping = false;
+                                    break;
+                            }
+                            commandNotExecuted = false;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            throw new Exception("\nInvalid Entry");
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    Console.WriteLine("\nPress Enter to Continue");
-                    Console.ReadLine();
-                    Console.Clear();
-                }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                } while (commandNotExecuted);
+                Console.WriteLine("\nCommand successfully executed.\nPress Enter to Continue");
+                Console.ReadLine();
+                Console.Clear();
             } while (keepLooping);
         }
 
@@ -88,9 +101,9 @@ namespace SpaceGame
                 {
                     // Ensures that the current location is not listed
                     if (universe[i].GetPlanets()[j].GetName() != myPlayer.GetLocation().GetName())
-                    { 
+                    {
                         // Compares the distance of the next planet on the list to the maximum distance possible to travel with current fuel level
-                        if(GetDistance(myPlayer.GetLocation().GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
+                        if (GetDistance(myPlayer.GetLocation().GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
                         {
                             reachablePlanets.Add(universe[i].GetPlanets()[j]);
                         }
@@ -117,12 +130,12 @@ namespace SpaceGame
         {
             int selection = 0;
             int quantity = 0;
-            
+
             // Building the output strings for buy and sell menues
             string itemList = "";
+            int count = 1;
             foreach (Goods good in tradingGoods)
             {
-                int count = 1;
                 itemList += count++ + ". " + good.GetName() + "\n";
                 if (count == 10)
                 {
@@ -131,7 +144,7 @@ namespace SpaceGame
             }
             string buyMenu = "What would you like to buy? \n" + itemList;
             string sellMenu = "What would you like to sell? \n" + itemList;
-            
+
             Console.WriteLine("Select from the following options: \n1. buy\n2. sell\n\n >>> ");
             int tradeMode = int.Parse(Console.ReadLine().Trim());
             if (tradeMode == 1)
@@ -162,7 +175,7 @@ namespace SpaceGame
                 selection = int.Parse(Console.ReadLine().Trim());
 
                 // Counts how many of selected items does the user have in his cargo
-                int count = 0;
+                int countGoodsInCargo = 0;
                 foreach (Goods good in myPlayer.GetCargo())
                 {
                     if (good.GetName() == tradingGoods[selection].GetName())
@@ -170,11 +183,11 @@ namespace SpaceGame
                         count++;
                     }
                 }
-                if (count > 0)
+                if (countGoodsInCargo > 0)
                 {
                     Console.WriteLine("How many units would you like to sell?\n\n>>> ");
                     int sellQuantity = int.Parse(Console.ReadLine().Trim());
-                    if (sellQuantity <= count)
+                    if (sellQuantity <= countGoodsInCargo)
                     {
                         // removes the sold item from the user's cargo
                         myPlayer.RemoveCargo(tradingGoods[selection]);
@@ -199,36 +212,40 @@ namespace SpaceGame
             {
                 destinationList = ReachablePlanets(myPlayer, universe);
 
-                string menuList = "";
+                string menuList = "\n";
                 for (int i = 0; i < destinationList.Count(); i++)
                 {
                     menuList += $"{i + 1}. {destinationList[i].GetName()}";
-                    if (((i+1) % 5 != 0) || (i == 0))
+                    if (((i + 1) % 5 != 0) || (i == 0))
                     { menuList += " \t"; }
                     else
                     { menuList += "\n"; }
                 }
-                Console.WriteLine($"Where would you like to travel to:\n" + menuList);
-                int selection = int.Parse(Console.ReadLine());
-                to = destinationList[selection - 1].GetCoordinates();
-                Planet destination = destinationList[selection - 1];
-
-                // Calculating the distance and time traveled
-                distance = GetDistance(from, to);
-                travelTime = GetTimeElapsed(distance, myPlayer.GetShip().GetSpeed());
-
-                // Updates the user's travel time
-                myPlayer.SetTravelTime(travelTime);
-
-                // Checks to total time elapsed
-                if (myPlayer.GetTravelTime() >= 40)
+                Console.Write($"\nWhere would you like to travel to:\n" + menuList + "\n\n>>> ");
+                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                if (Enumerable.Range(1, destinationList.Count()).Contains(selection.GetSelection()))
                 {
-                    Utilities.EndGameReport(myPlayer);
-                    Environment.Exit(-1);
+                    to = destinationList[selection.GetSelection() - 1].GetCoordinates();
+                    Planet destination = destinationList[selection.GetSelection() - 1];
+                    // Calculating the distance and time traveled
+                    distance = GetDistance(from, to);
+                    travelTime = GetTimeElapsed(distance, myPlayer.GetShip().GetSpeed());
+                    // Updates the user's travel time
+                    myPlayer.SetTravelTime(travelTime);
+                    // Checks to total time elapsed
+                    if (myPlayer.GetTravelTime() >= 40)
+                    {
+                        Utilities.EndGameReport(myPlayer);
+                        Environment.Exit(-1);
+                    }
+                    // Updates the user's location
+                    myPlayer.SetLocation(destination);
                 }
-
-                // Updates the user's location
-                myPlayer.SetLocation(destination);
+                else
+                {
+                    Console.Clear();
+                    throw new Exception("\nInvalid Entry");
+                }
             }
             catch (Exception ex)
             {
