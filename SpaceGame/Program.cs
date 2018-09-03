@@ -57,7 +57,7 @@ namespace SpaceGame
                             Travel(myPlayer, universe);
                             break;
                         case 4:
-                            myPlayer.newShip();
+                            myPlayer.newShip(true);
                             break;
                         case 5:
                             Console.WriteLine("You chose to end the game.\n");

@@ -10,22 +10,58 @@ namespace SpaceGame
     {
         public Player()
         {
+            bool keepLooping = true;
             // enter user's name
-            Console.Write("\nType your name\n\n>>> ");
-            string input = Console.ReadLine().Trim();
-            if (input != "")
-            {this.name = input;}
-            else
-            {throw new Exception("Invalid Entry");}
+            do
+            {
+                try
+                {
+                    Console.Write("\nType your name\n\n>>> ");
+                    string input = Console.ReadLine().Trim();
+                    if (input != "")
+                    {
+                        this.name = input;
+                        keepLooping = false;
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        throw new Exception("\nInvalid Entry");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (keepLooping);
 
             // enter user's gender
-            Console.Write("\nSelect your gender\n1. Male\n2. Female\n\n>>> ");
-            if (Console.ReadLine().Trim() == "1")
-            {this.gender = "Male";}
-            else if (Console.ReadLine().Trim() == "2")
-            {this.gender = "Female";}
-            else
-            {throw new Exception("Invalid Entry");}
+            keepLooping = true;
+            do
+            {
+                try
+                {
+                    string[] genderArray = { "Male", "Female" };
+                    Console.Write($"\nSelect your gender, {this.name}:\n1. {genderArray[0]}\n2. {genderArray[1]}\n\n>>> ");
+                    int selection = int.Parse(Console.ReadLine().Trim());
+                    if (Enumerable.Range(1,2).Contains(selection))
+                    {
+                        this.gender = genderArray[selection -1];
+                        keepLooping = false;
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        throw new Exception("\nInvalid Entry");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (keepLooping);
 
             // mark starting point as Earth
             double[] startingPoint = { 0.0, 0.0 };
@@ -38,7 +74,7 @@ namespace SpaceGame
             this.travelTime = 0;
 
             // prompt the user to purchase a ship
-            this.ship = newShip();
+            this.ship = newShip(true);
 
             // Updates user's wallet.
             SetWallet(-ship.GetPrice());
@@ -72,7 +108,7 @@ namespace SpaceGame
         public void SetTravelTime(double travelTime) => this.travelTime += travelTime;
 
         public double GetFuel() => this.fuel;
-        public void SetFuel(double fuel) => this.fuel += fuel; 
+        public void SetFuel(double fuel) => this.fuel += fuel;
 
         public List<Goods> GetCargo() => this.cargo;
         public int GetCargoCount() => this.cargo.Count();
@@ -82,12 +118,34 @@ namespace SpaceGame
         public Ship GetShip() => this.ship;
 
         // Purchase a ship
-        public Ship newShip()
+        public Ship newShip(bool keepLooping)
         {
             string model = "";
-            string[] modelNames = { "Shuttlecraft", "Freighter", "Cruise Freighter", "Starship" };
-            Console.Write("Select the type of ship you want to purchase:\n1. Shuttlecraft\n2. Freighter\n3. Cruise Freighter\n4. Starship\n\n>>> ");
-            model = modelNames[int.Parse(Console.ReadLine().Trim()) - 1];
+            do
+            {
+                try
+                {
+
+                    string[] modelNames = { "Shuttlecraft", "Freighter", "Cruise Freighter", "Starship" };
+                    Console.Write($"\nSelect the type of ship you want to purchase, {this.name}:\n1. {modelNames[0]}\n2. {modelNames[1]}\n3. {modelNames[2]}\n4. {modelNames[3]}\n\n>>> ");
+                    int selection = int.Parse(Console.ReadLine().Trim());
+                    if (Enumerable.Range(1, 4).Contains(selection))
+                    {
+                        model = modelNames[selection - 1];
+                        keepLooping = false;
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        throw new Exception("\nInvalid Entry");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (keepLooping);
             return new Ship(model);
         }
 
