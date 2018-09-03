@@ -143,13 +143,14 @@ namespace SpaceGame
             int count = 1;
             foreach (Goods good in tradingGoods)
             {
+
                 itemList += count++ + ". " + good.GetName() + "\n";
-                if (count == 10)
+                if (count == 11)
                 {
                     itemList += "\n>>> ";
                 }
             }
-            string[] tradeMenu = { "\nWhat would you like to buy? \n" + itemList, "\nWhat would you like to sell? \n" + itemList };
+            string[] tradeMenu = { "\nWhat would you like to buy?\n\n" + itemList, "\nWhat would you like to sell?\n\n" + itemList };
             return tradeMenu;
         }
     }

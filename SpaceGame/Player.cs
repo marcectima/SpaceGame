@@ -42,7 +42,7 @@ namespace SpaceGame
                 try
                 {
                     string[] genderArray = { "Male", "Female" };
-                    Console.Write($"\nSelect your gender, {this.name}:\n1. {genderArray[0]}\n2. {genderArray[1]}\n\n>>> ");
+                    Console.Write($"\nSelect your gender, {this.name}:\n\n1. {genderArray[0]}\n2. {genderArray[1]}\n\n>>> ");
                     MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
                     if (Enumerable.Range(1, 2).Contains(selection.GetSelection()))
                     {
@@ -88,7 +88,7 @@ namespace SpaceGame
         private double wallet;
         private double travelTime;
         private double fuel;
-        private List<Goods> cargo;
+        private List<Goods> cargo = new List<Goods>();
         private Ship ship;
 
         public string GetName() => this.name;
@@ -121,58 +121,100 @@ namespace SpaceGame
         {
             string buyMenu = TradeMenu[0];
             string sellMenu = TradeMenu[1];
-            Console.Write("\nSelect from the following options:\n\n1. buy\n2. sell\n\n>>> ");
-            MenuSelection tradeMode = new MenuSelection(Console.ReadLine().Trim());
-            if (tradeMode.GetSelection() == 1)
+            bool keepLooping = true;
+            do
             {
-                Console.WriteLine(buyMenu);
-                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
-
-                Console.WriteLine("How many units would you like to buy?");
-                MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
-
-                // Checks if there is enough room in the ship's cargo bay 
-                if (myPlayer.GetCargo().Count() + quantity.GetSelection() <= myPlayer.GetShip().GetCargoCapacity())
+                Console.Write("\nSelect from the following options:\n\n1. buy\n2. sell\n\n>>> ");
+                MenuSelection tradeMode = new MenuSelection(Console.ReadLine().Trim());
+                try
                 {
-                    // Adds an item to the player's cargo
-                    myPlayer.AddCargo(tradingGoods[selection.GetSelection()]);
-
-                    // Updates the user's wallet 
-                    myPlayer.SetWallet(-tradingGoods[selection.GetSelection()].GetPrice() * myPlayer.GetLocation().GetMultiplier());
-                }
-                else
-                {
-                    Console.WriteLine("The ship's cargo is full.");
-                }
-            }
-            else if (tradeMode.GetSelection() == 2)
-            {
-                Console.WriteLine(sellMenu);
-                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
-
-                // Counts how many of selected items does the user have in his cargo
-                int count = 0;
-                foreach (Goods good in myPlayer.GetCargo())
-                {
-                    if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
+                    if (tradeMode.GetSelection() == 1)
                     {
-                        count++;
+                        if (myPlayer.GetCargo().Count() != myPlayer.GetShip().GetCargoCapacity())
+                        {
+                            Console.Clear();
+                            Console.WriteLine(buyMenu);
+                            MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                            Console.WriteLine("\nHow many units would you like to buy?");
+                            MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
+
+                            // Checks if there is enough room in the ship's cargo bay 
+                            if (myPlayer.GetCargo().Count() + quantity.GetSelection() <= myPlayer.GetShip().GetCargoCapacity())
+                            {
+                                // Adds an item to the player's cargo
+                                myPlayer.AddCargo(tradingGoods[selection.GetSelection()]);
+                                // Updates the user's wallet 
+                                myPlayer.SetWallet(-tradingGoods[selection.GetSelection()].GetPrice() * myPlayer.GetLocation().GetMultiplier());
+                                keepLooping = false;
+                            }
+                            else
+                            {
+                                throw new Exception("\nThere isn't enough room in the ship's cargo bay for the selected quantity. Select fewer items.");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("\nThe ship's cargo bay is full. Sell some goods before you attempt to purchase more.");
+                        }
+                    }
+                    else if (tradeMode.GetSelection() == 2)
+                    {
+                        Console.WriteLine(sellMenu);
+                        MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                        // Counts how many of selected items does the user have in his cargo
+                        int count = 0;
+                        foreach (Goods good in myPlayer.GetCargo())
+                        {
+                            if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
+                            {
+                                count++;
+                            }
+                        }
+                        if (count > 0)
+                        {
+                            Console.WriteLine("\nHow many units would you like to sell?\n\n>>> ");
+                            MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
+
+                            if (quantity.GetSelection() <= count)
+                            {
+                                // removes the sold item from the user's cargo
+                                for (int i = 0; i < quantity.GetSelection(); i++)
+                                {
+                                    myPlayer.RemoveCargo(tradingGoods[selection.GetSelection()]);
+                                }
+                                // Updates the user's wallet. 10% sales tax is added.
+                                myPlayer.SetWallet(tradingGoods[selection.GetSelection()].GetPrice() * quantity.GetSelection() * myPlayer.GetLocation().GetMultiplier() * 1.1);
+
+                                keepLooping = false;
+                            }
+                            else
+                            {
+                                int number = 0;
+                                foreach (Goods good in myPlayer.GetCargo())
+                                {
+                                    if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
+                                        number++;
+                                }
+                                throw new Exception($"\nYou have only {number} {tradingGoods[selection.GetSelection()].GetName()} in your cargo bay.");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("\nYou don't have any of the selected goods in the cargo bay.");
+                        }
+
+                    }
+                    else
+                    {
+                        throw new Exception("\nInvalid Entry");
                     }
                 }
-                if (count > 0)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("How many units would you like to sell?\n\n>>> ");
-                    MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());
-                    if (quantity.GetSelection() <= count)
-                    {
-                        // removes the sold item from the user's cargo
-                        myPlayer.RemoveCargo(tradingGoods[selection.GetSelection()]);
-
-                        // Updates the user's wallet. 10% sales tax is added.
-                        myPlayer.SetWallet(tradingGoods[selection.GetSelection()].GetPrice() * myPlayer.GetLocation().GetMultiplier() * 1.1);
-                    }
+                    Console.Clear();
+                    Console.WriteLine(ex.Message);
                 }
-            }
+            } while (keepLooping);
         }
 
         // Updates user location and travel time

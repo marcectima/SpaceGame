@@ -54,6 +54,7 @@ namespace SpaceGame
                                     myPlayer.ShowStatus(myPlayer);
                                     break;
                                 case 2:
+                                    Console.Clear();
                                     myPlayer.Trade(tradingGoods, myPlayer, TradeMenu);
                                     break;
                                 case 3:
