@@ -28,9 +28,6 @@ namespace SpaceGame
 
             // Opens action menu. This is where the game runs.
             ShowActionMenu(myPlayer, universe, tradingGoods, TradeMenu);
-
-            // Quits the Game
-            Environment.Exit(-1);
         }
 
         // Action menu

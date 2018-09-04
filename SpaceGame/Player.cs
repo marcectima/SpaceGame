@@ -134,7 +134,7 @@ namespace SpaceGame
                     {
                         Console.Write(buyMenu);
                         MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
-                        if (Enumerable.Range(1, 10).Contains(selection.GetSelection()))
+                         if (Enumerable.Range(1, 10).Contains(selection.GetSelection()))
                         {
                             Console.Write("\nHow many units would you like to buy?\n\n>>> ");
                             MenuSelection quantity = new MenuSelection(Console.ReadLine().Trim());

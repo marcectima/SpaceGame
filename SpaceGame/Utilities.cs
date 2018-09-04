@@ -120,6 +120,8 @@ namespace SpaceGame
                               $"\nYou are leaving the game with an overall profit of {myPlayer.GetWallet() - 15000}." +
                               $"\nYour overall travel time in the universe is {myPlayer.GetTravelTime()} years." +
                               $"\n\nBest of luck to you in real life.");
+            // Quits the Game
+            Environment.Exit(-1);
         }
     }
 }
