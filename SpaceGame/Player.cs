@@ -141,14 +141,22 @@ namespace SpaceGame
                             // Checks if there is enough room in the ship's cargo bay 
                             if (GetCargo().Count() + quantity.GetSelection() <= GetShip().GetCargoCapacity())
                             {
-                                // Adds an item to the player's cargo
-                                for (int i = 0; i < quantity.GetSelection(); i++)
+                                if (GetWallet() >= quantity.GetSelection() * tradingGoods[selection.GetSelection() - 1].GetPrice())
                                 {
-                                    AddCargo(tradingGoods[selection.GetSelection()]);
+                                    // Adds an item to the player's cargo
+                                    for (int i = 0; i < quantity.GetSelection(); i++)
+                                    {
+                                        AddCargo(tradingGoods[selection.GetSelection() - 1]);
+                                    }
+
+                                    // Updates the user's wallet 
+                                    SetWallet(-quantity.GetSelection() * tradingGoods[selection.GetSelection() - 1].GetPrice() * GetLocation().GetMultiplier());
+                                    keepLooping = false;
                                 }
-                                // Updates the user's wallet 
-                                SetWallet(-tradingGoods[selection.GetSelection()].GetPrice() * GetLocation().GetMultiplier());
-                                keepLooping = false;
+                                else
+                                {
+                                    throw new Exception("\nYou don't have enough credit to purchase this good.");
+                                }
                             }
                             else
                             {
@@ -190,7 +198,7 @@ namespace SpaceGame
                         int count = 0;
                         foreach (Goods good in GetCargo())
                         {
-                            if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
+                            if (good.GetName() == tradingGoods[selection.GetSelection() - 1].GetName())
                             {
                                 count++;
                             }
@@ -205,10 +213,10 @@ namespace SpaceGame
                                 // removes the sold item from the user's cargo
                                 for (int i = 0; i < quantity.GetSelection(); i++)
                                 {
-                                    RemoveCargo(tradingGoods[selection.GetSelection()]);
+                                    RemoveCargo(tradingGoods[selection.GetSelection() - 1]);
                                 }
                                 // Updates the user's wallet. 10% sales tax is added.
-                                SetWallet(tradingGoods[selection.GetSelection()].GetPrice() * quantity.GetSelection() * GetLocation().GetMultiplier() * 1.1);
+                                SetWallet(tradingGoods[selection.GetSelection() - 1].GetPrice() * quantity.GetSelection() * GetLocation().GetMultiplier() * 1.1);
                                 keepLooping = false;
                             }
                             else
@@ -216,10 +224,10 @@ namespace SpaceGame
                                 int number = 0;
                                 foreach (Goods good in GetCargo())
                                 {
-                                    if (good.GetName() == tradingGoods[selection.GetSelection()].GetName())
+                                    if (good.GetName() == tradingGoods[selection.GetSelection() - 1].GetName())
                                         number++;
                                 }
-                                throw new Exception($"\nYou have only {number} {tradingGoods[selection.GetSelection()].GetName()} in your cargo bay.");
+                                throw new Exception($"\nYou have only {number} {tradingGoods[selection.GetSelection() - 1].GetName()} in your cargo bay.");
                             }
                         }
                         else
@@ -252,57 +260,63 @@ namespace SpaceGame
             double travelTime = 0;
             double W = GetShip().GetSpeed();
             List<Planet> destinationList = new List<Planet>();
-            try
+            bool keepLooping = true;
+
+            do
             {
-                // Creating list of planets that are reachable with the current fuel level 
-                destinationList = ReachablePlanets(universe);
-
-                // building a menu list for planets that can be traveled to
-                string menuList = "\n";
-                for (int i = 0; i < destinationList.Count(); i++)
+                try
                 {
-                    menuList += $"{i + 1}. {destinationList[i].GetName()}";
-                    if (((i + 1) % 5 != 0) || (i == 0))
-                    { menuList += " \t"; }
-                    else
-                    { menuList += "\n"; }
-                }
+                    // Creating list of planets that are reachable with the current fuel level 
+                    destinationList = ReachablePlanets(universe);
 
-                Console.Write($"\nWhere would you like to travel to:\n" + menuList + "\n\n>>> ");
-                MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
-                if (Enumerable.Range(1, destinationList.Count()).Contains(selection.GetSelection()))
-                {
-
-                    // initializing destination coordinates
-                    to = destinationList[selection.GetSelection() - 1].GetCoordinates();
-
-                    Planet destination = destinationList[selection.GetSelection() - 1];
-                    // Calculating the distance and time traveled
-                    distance = GetDistance(from, to);
-                    travelTime = GetTimeElapsed(distance, GetShip().GetSpeed());
-                    // Updates the user's travel time
-                    SetTravelTime(travelTime);
-                    // Checks to total time elapsed
-                    if (GetTravelTime() >= 40)
+                    // building a menu list for planets that can be traveled to
+                    string menuList = "\n";
+                    for (int i = 0; i < destinationList.Count(); i++)
                     {
-                        Utilities.EndGameReport(this);
-                        Environment.Exit(-1);
+                        menuList += $"{i + 1}. {destinationList[i].GetName()}";
+                        if (((i + 1) % 5 != 0) || (i == 0))
+                        { menuList += " \t"; }
+                        else
+                        { menuList += "\n"; }
                     }
-                    // Update the fuel level
-                    SetFuel(-distance);
-                    // Updates the user's location
-                    SetLocation(destination);
 
+                    Console.Write($"\nWhere would you like to travel to:\n" + menuList + "\n\n>>> ");
+                    MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                    if (Enumerable.Range(1, destinationList.Count()).Contains(selection.GetSelection()))
+                    {
+
+                        // initializing destination coordinates
+                        to = destinationList[selection.GetSelection() - 1].GetCoordinates();
+
+                        Planet destination = destinationList[selection.GetSelection() - 1];
+                        // Calculating the distance and time traveled
+                        distance = GetDistance(from, to);
+                        travelTime = GetTimeElapsed(distance, GetShip().GetSpeed());
+                        // Updates the user's travel time
+                        SetTravelTime(travelTime);
+                        // Checks to total time elapsed
+                        if (GetTravelTime() >= 40)
+                        {
+                            Utilities.EndGameReport(this);
+                            Environment.Exit(-1);
+                        }
+                        // Update the fuel level. 1 fuel is used per lightyear of distance.
+                        SetFuel(-distance);
+                        // Updates the user's location
+                        SetLocation(destination);
+                        keepLooping = false;
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        throw new Exception("\nInvalid Entry");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new Exception("\nInvalid Entry");
+                    Console.WriteLine(ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            } while (keepLooping);
         }
 
         // Purchase a ship
