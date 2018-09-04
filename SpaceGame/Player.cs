@@ -121,6 +121,7 @@ namespace SpaceGame
         {
             Console.WriteLine($"\nwallet: {GetWallet()}\ntravel time: {GetTravelTime()}\nlocation: {GetLocation().GetName()}\nfuel: {GetFuel()}");
         }
+
         // Buy goods
         public void BuyGoods(string buyMenu, Goods[] tradingGoods)
         {
@@ -365,12 +366,15 @@ namespace SpaceGame
                                       $"\nTank Capacity:\t\t{tank} tons" +
                                       $"\nFuel Price:\t\t{fuelPrice} credits per ton");
                     Console.Write("\nHow many tons of fuel do you wish to buy?\n\n>>> ");
-                    double selection = double.Parse(Console.ReadLine());
-                    if (selection >= 0 && selection <= tank - fuelLevel)
+                    MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                    if (selection.GetSelection() >= 0 && selection.GetSelection() <= tank - fuelLevel)
                     {
-                        if (this.GetWallet() >= selection * fuelPrice)
+                        if (this.GetWallet() >= selection.GetSelection() * fuelPrice)
                         {
-                            SetFuel(selection);
+                            // Updating fuel level
+                            SetFuel(selection.GetSelection());
+                            // Updating the user's wallet
+                            SetWallet(-selection.GetSelection() * fuelPrice);
                             keepLooping = false;
                         }
                         else
