@@ -10,6 +10,26 @@ namespace SpaceGame
     {
         static void Main(string[] args)
         {
+
+            // Setting the conolse text color to green
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+
+            // Creating the univers
+            List<PlanetarySystem> universe = Utilities.OperationGenesis();
+
+            // Creating trading goods and trade menus
+            Goods[] tradingGoods = Utilities.CreateTradingGoods();
+            string[] TradeMenu = Utilities.CreateTradeMenus(tradingGoods);
+
+            Console.WriteLine("\nWelcome to Space Trader");
+
+            // Creating a new user.
+            Player myPlayer = new Player();
+            Console.Clear();
+
+            // Opens action menu. This is where the game runs.
+            ShowActionMenu(myPlayer, universe, tradingGoods, TradeMenu);
+
             // Game's Introduction
             Console.ForegroundColor = ConsoleColor.DarkGreen; 
             Console.WriteLine(" \n" +
@@ -215,15 +235,20 @@ namespace SpaceGame
             // Opens action menu.
             ShowActionMenu(ref user, ref ship);
             Environment.Exit(-1);
+
         }
         // Action menu
-        private static void ShowActionMenu(ref string[] user, ref string[] ship)
+        private static void ShowActionMenu(Player myPlayer, List<PlanetarySystem> universe, Goods[] tradingGoods, string[] TradeMenu)
         {
             bool keepLooping = true;
             do
             {
-                try
+                bool commandNotExecuted = true;
+                do
                 {
+
+                    try
+
                     Console.Write("Select from the following options:\n" +
                                         "1. Status\n" +
                                         "2. Trade\n" +
@@ -233,229 +258,89 @@ namespace SpaceGame
                                         "\n ");
                     int selection = int.Parse(Console.ReadLine());
                     switch (selection)
+
                     {
-                        case 1:
-                            ShowStatus(user);
-                            break;
-                        case 2:
-                            Trade(ref user, ref ship);
-                            break;
-                        case 3:
-                            ChangeLocation(ref user, ship);
-                            break;
-                        case 4:
-                            NewShip(ref user);
-                            break;
-                        case 5:
-                            Console.WriteLine("You chose to end the game.");
-                            ShowStatus(user);
-                            keepLooping = false;
-                            break;
+                        Console.Write("\nSelect from the following options:\n\n1. Status\n2. Trade\n3. Travel to...\n4. Refuel\n5. Change ship\n6. Quit game\n\n>>> ");
+                        MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
+                        if (Enumerable.Range(1, 6).Contains(selection.GetSelection()))
+                        {
+                            switch (selection.GetSelection())
+                            {
+                                case 1:
+                                    myPlayer.ShowStatus();
+                                    break;
+                                case 2:
+                                    Console.Clear();
+                                    Trade(tradingGoods, myPlayer, TradeMenu);
+                                    break;
+                                case 3:
+                                    myPlayer.Travel(universe);
+                                    break;
+                                case 4:
+                                    myPlayer.Refuel(true);
+                                    break;
+                                case 5:
+                                    myPlayer.newShip(true);
+                                    break;
+                                case 6:
+                                    Console.WriteLine("You chose to end the game.\n");
+                                    Utilities.EndGameReport(myPlayer);
+                                    keepLooping = false;
+                                    break;
+                            }
+                            commandNotExecuted = false;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            throw new Exception("\nInvalid Entry");
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Invalid entry.");
-                }
-                finally
-                {
-                    Console.WriteLine("\nPress Enter to Continue");
-                    Console.ReadLine();
-                    Console.Clear();
-                }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                } while (commandNotExecuted);
+                Console.WriteLine("\nCommand successfully executed. Press Enter to Continue.");
+                Console.ReadLine();
+                Console.Clear();
             } while (keepLooping);
         }
 
-        // Updates user location and travel time.
-        private static void ChangeLocation(ref string[] user, string[] ship)
-        {
-            string[] destinations = { "Earth", "Alpha Centauri", "Prextie" };
-            double[] Earth = { 0, 0 };
-            double[] AlphaCentauri = { 0, -4.367 };
-            double[] Prextie = { -4.6, 5.0 };
-            double[] from = new double[2];
-            double[] to = new double[2];
-            string whereTo = "";
-            double distance = 0;
-            double travelTime = 0;
-            double W = int.Parse(ship[1].Trim());
-            try
-            {
-                do
-                {
-                    switch (user[4])
-                    {
-                        case "Earth":
-                            from = Earth;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[1]}\n" +
-                            $"2. {destinations[2]}");
-                            string selection1 = Console.ReadLine().Trim();
-                            if (selection1 == "1") { whereTo = destinations[1]; }
-                            else if (selection1 == "2") { whereTo = destinations[2]; }
-                            break;
-                        case "Alpha Centauri":
-                            from = AlphaCentauri;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[0]}\n" +
-                            $"2. {destinations[2]}");
-                            string selection2 = Console.ReadLine().Trim();
-                            if (selection2 == "1") { whereTo = destinations[0]; }
-                            else if (selection2 == "2") { whereTo = destinations[2]; }
-                            break;
-                        case "Prextie":
-                            from = Prextie;
-                            Console.WriteLine("Where would you like to travel to? \n" +
-                            $"1. {destinations[0]}\n" +
-                            $"2. {destinations[1]}");
-                            string selection3 = Console.ReadLine().Trim();
-                            if (selection3 == "1") { whereTo = destinations[0]; }
-                            else if (selection3 == "2") { whereTo = destinations[1]; }
-                            break;
-                    }
-                } while (whereTo == "");
-                switch (whereTo)
-                {
-                    case "Earth":
-                        to = Earth;
-                        break;
-                    case "Alpha Centauri":
-                        to = AlphaCentauri;
-                        break;
-                    case "Prextie":
-                        to = Prextie;
-                        break;
-                }
-                // Calculates the distance between two destinations
-                distance = Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
-
-                // Calculates the elapsed time in years.
-                travelTime = distance / (Math.Pow(W, 10.0 / 3.0) + Math.Pow(10 - W, -11.0 / 3.0));
-
-                // Updates the user's travel time.
-                user[3] = Convert.ToString(double.Parse(user[3].Trim()) + travelTime);
-                // Checks to total time elapsed.
-                if (double.Parse(user[3]) == 40 * 52560)
-                {
-                    EndGameReport();
-                    Environment.Exit(-1);
-                }
-
-                // Updates the user's location.
-                user[4] = whereTo;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Invalid entry.");
-            }
-        }
-
         // Executes the trading decisions
-        private static void Trade(ref string[] user, ref string[] ship)
+        private static void Trade(Goods[] tradingGoods, Player myPlayer, string[] TradeMenu)
         {
-            string[] earthGoods = { "art", "wine", "literature" };
-            double[] earthPrices = { 1250.00, 750.00, 1499.99 };
-            string[] acGoods = { "dilithium crystals", "positronic brain" };
-            double[] acPrices = { 3250.00, 3075.50 };
-            string[] prextieGoods = { "dark energy shots", "black whole tickets" };
-            double[] prextiePrices = { 3499.99, 4999.99 };
-            int selection = 0;
-            int quantity = 0;
-            Console.WriteLine("Select from the following uptions: \n" +
-            "1. buy\n" +
-            "2. sell");
-            int tradeMode = int.Parse(Console.ReadLine().Trim());
-            if (tradeMode == 1)
+            string buyMenu = TradeMenu[0];
+            string sellMenu = TradeMenu[1];
+            bool keepLooping = true;
+            do
             {
-                switch (user[4])
+                Console.Write("\nSelect from the following options:\n\n1. buy\n2. sell\n\n>>> ");
+                MenuSelection tradeMode = new MenuSelection(Console.ReadLine().Trim());
+                try
                 {
-                    case "Earth":
-                        Console.WriteLine("what would you like to buy? \n" +
-                        $"1. {earthGoods[0]}\n" +
-                        $"2. {earthGoods[1]}\n" +
-                        $"3. {earthGoods[2]}");
-                        selection = int.Parse(Console.ReadLine().Trim());
-                        break;
-                    case "Alpha Centauri":
-                        Console.WriteLine("what would you like to buy? \n" +
-                        $"1. {acGoods[0]}\n" +
-                        $"2. {acGoods[1]}");
-                        selection = int.Parse(Console.ReadLine().Trim());
-                        break;
-                    case "Prextie":
-                        Console.WriteLine("what would you like to buy? \n" +
-                        $"1. {prextieGoods[0]}\n" +
-                        $"2. {prextieGoods[1]}\n");
-                        selection = int.Parse(Console.ReadLine().Trim());
-                        break;
-                }
-                Console.WriteLine("How many units would you like to buy?");
-                quantity = int.Parse(Console.ReadLine().Trim());
-                if (int.Parse(user[5].Trim()) < int.Parse(ship[2].Trim()))
-                {
-                    switch (user[4])
+                    if (tradeMode.GetSelection() == 1)
                     {
-                        case "Earth":
-                            // updates the user's wallet
-                            user[2] = Convert.ToString(double.Parse(user[2]) - earthPrices[selection - 1]);
-                            // update Earth goods' quantity
-                            user[5] = Convert.ToString(int.Parse(user[5]) + quantity);
-                            break;
-                        case "Alpha Centauri":
-                            // updates the user's wallet
-                            user[2] = Convert.ToString(double.Parse(user[2]) - acPrices[selection - 1]);
-                            // update Earth goods' quantity
-                            user[6] = Convert.ToString(int.Parse(user[6]) + quantity);
-                            break;
-                        case "Prextie":
-                            // updates the user's wallet
-                            user[2] = Convert.ToString(double.Parse(user[2]) - prextiePrices[selection - 1]);
-                            // update Earth goods' quantity
-                            user[7] = Convert.ToString(int.Parse(user[7]) + quantity);
-                            break;
+                        myPlayer.BuyGoods(buyMenu, tradingGoods);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("The ship's cargo is full.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("What would you like to sell?\n" +
-                    "1. Earth Goods\n" +
-                    "2. Alpha Centauri Goods\n" +
-                    "3. Prextie Goods");
-                var goodsType = Console.ReadLine().Trim();
-                if (int.Parse(user[int.Parse(goodsType) + 4]) > 0)
-                {
-                    Console.WriteLine("How many units would you like to sell?");
-                    int sellQuantity = int.Parse(Console.ReadLine().Trim());
-                    if (sellQuantity <= int.Parse(user[int.Parse(goodsType) + 4]))
+                    else if (tradeMode.GetSelection() == 2)
                     {
-                        // Updates the user's cargo for the specified good
-                        user[int.Parse(goodsType) + 4] = Convert.ToString(int.Parse(user[5]) - sellQuantity);
-                        // updates the user's wallet
-                        if (user[4] == "Earth" && goodsType == "1")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity*500);
-                        else if (user[4] == "Earth" && goodsType == "2")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 4000);
-                        else if (user[4] == "Earth" && goodsType == "3")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 5000);
-                        else if (user[4] == "Alpha Centauri" && goodsType == "1")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
-                        else if (user[4] == "Alpha Centauri" && goodsType == "2")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
-                        else if (user[4] == "Alpha Centauri" && goodsType == "3")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 7000);
-                        else if (user[4] == "Prextie" && goodsType == "1")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 2000);
-                        else if (user[4] == "Prextie" && goodsType == "2")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 7000);
-                        else if (user[4] == "Prextie" && goodsType == "3")
-                            user[2] = Convert.ToString(double.Parse(user[2]) + sellQuantity * 3000);
+                        myPlayer.SellGoods(sellMenu, tradingGoods);
                     }
+                    else
+                    {
+                        throw new Exception("\nInvalid Entry");
+                    }
+                    keepLooping = false;
                 }
+
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine(ex.Message);
+                }
+            } while (keepLooping);
+
             }
         }
 
@@ -545,6 +430,7 @@ namespace SpaceGame
         private static void EndGameReport()
         {
             throw new NotImplementedException();
+
         }
     }
 }
