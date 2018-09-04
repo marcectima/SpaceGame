@@ -47,13 +47,14 @@ namespace SpaceGame
         private string modelName;
         private double price;
         private double speed;
+        private double tankCapacity;
         private int cargoCapacity;
-        private int tankCapacity;
 
         public string GetModelName() => modelName;
         public double GetPrice() => price;
         public double GetSpeed() => speed;
+        public double GetTankCapacity() => tankCapacity;
         public int GetCargoCapacity() => cargoCapacity;
-        public int GetTankCapacity() => tankCapacity;
+
     }
 }

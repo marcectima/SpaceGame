@@ -116,8 +116,11 @@ namespace SpaceGame
 
         public Ship GetShip() => this.ship;
 
-
-
+        // Displays information about user and currentShip
+        public void ShowStatus()
+        {
+            Console.WriteLine($"\nwallet: {GetWallet()}\ntravel time: {GetTravelTime()}\nlocation: {GetLocation().GetName()}\nfuel: {GetFuel()}");
+        }
         // Buy goods
         public void BuyGoods(string buyMenu, Goods[] tradingGoods)
         {
@@ -240,7 +243,9 @@ namespace SpaceGame
         // Updates user location and travel time
         public void Travel(List<PlanetarySystem> universe)
         {
+            // Establishing starting coordinates
             double[] from = GetLocation().GetCoordinates();
+            // Creating destination coordinates
             double[] to = new double[2];
             double distance = 0;
             double travelTime = 0;
@@ -248,8 +253,10 @@ namespace SpaceGame
             List<Planet> destinationList = new List<Planet>();
             try
             {
+                // Creating list of planets that are reachable with the current fuel level 
                 destinationList = ReachablePlanets(universe);
 
+                // building a menu list for planets that can be traveled to
                 string menuList = "\n";
                 for (int i = 0; i < destinationList.Count(); i++)
                 {
@@ -259,11 +266,15 @@ namespace SpaceGame
                     else
                     { menuList += "\n"; }
                 }
+
                 Console.Write($"\nWhere would you like to travel to:\n" + menuList + "\n\n>>> ");
                 MenuSelection selection = new MenuSelection(Console.ReadLine().Trim());
                 if (Enumerable.Range(1, destinationList.Count()).Contains(selection.GetSelection()))
                 {
+
+                    // initializing destination coordinates
                     to = destinationList[selection.GetSelection() - 1].GetCoordinates();
+
                     Planet destination = destinationList[selection.GetSelection() - 1];
                     // Calculating the distance and time traveled
                     distance = GetDistance(from, to);
@@ -276,12 +287,14 @@ namespace SpaceGame
                         Utilities.EndGameReport(this);
                         Environment.Exit(-1);
                     }
+                    // Update the fuel level
+                    SetFuel(-distance);
                     // Updates the user's location
                     SetLocation(destination);
+
                 }
                 else
                 {
-                    Console.Clear();
                     throw new Exception("\nInvalid Entry");
                 }
             }
@@ -378,14 +391,8 @@ namespace SpaceGame
             } while (keepLooping);
         }
 
-        // Displays information about user and currentShip
-        public void ShowStatus()
-        {
-            Console.WriteLine($"\nwallet: {GetWallet()}\ntravel time: {GetTravelTime()}\nlocation: {GetLocation()}\nfuel: {GetFuel()}");
-        }
-
         // Identifies the Planets within reach with the current fuel level 
-        public List<Planet> ReachablePlanets( List<PlanetarySystem> universe)
+        public List<Planet> ReachablePlanets(List<PlanetarySystem> universe)
         {
             double maxRange = 0.0;
             List<Planet> reachablePlanets = new List<Planet>();
