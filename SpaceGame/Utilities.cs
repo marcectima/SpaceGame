@@ -114,7 +114,7 @@ namespace SpaceGame
         // Displays the endgame stats.
         public static void EndGameReport(Player myPlayer)
         {
-            myPlayer.ShowStatus(myPlayer);
+            myPlayer.ShowStatus();
             Console.WriteLine("\nYour Journey is over. ");
             Console.WriteLine($"You started the game with 15000 credits and ended with {myPlayer.GetWallet()}." +
                               $"\nYou are leaving the game with an overall profit of {myPlayer.GetWallet() - 15000}." +

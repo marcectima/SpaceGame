@@ -51,14 +51,14 @@ namespace SpaceGame
                             switch (selection.GetSelection())
                             {
                                 case 1:
-                                    myPlayer.ShowStatus(myPlayer);
+                                    myPlayer.ShowStatus();
                                     break;
                                 case 2:
                                     Console.Clear();
                                     Trade(tradingGoods, myPlayer, TradeMenu);
                                     break;
                                 case 3:
-                                    myPlayer.Travel(myPlayer, universe);
+                                    myPlayer.Travel(universe);
                                     break;
                                 case 4:
                                     myPlayer.Refuel(true);

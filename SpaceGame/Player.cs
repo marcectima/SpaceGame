@@ -238,17 +238,17 @@ namespace SpaceGame
         }
 
         // Updates user location and travel time
-        public void Travel(Player myPlayer, List<PlanetarySystem> universe)
+        public void Travel(List<PlanetarySystem> universe)
         {
-            double[] from = myPlayer.GetLocation().GetCoordinates();
+            double[] from = GetLocation().GetCoordinates();
             double[] to = new double[2];
             double distance = 0;
             double travelTime = 0;
-            double W = myPlayer.GetShip().GetSpeed();
+            double W = GetShip().GetSpeed();
             List<Planet> destinationList = new List<Planet>();
             try
             {
-                destinationList = ReachablePlanets(myPlayer, universe);
+                destinationList = ReachablePlanets(universe);
 
                 string menuList = "\n";
                 for (int i = 0; i < destinationList.Count(); i++)
@@ -267,17 +267,17 @@ namespace SpaceGame
                     Planet destination = destinationList[selection.GetSelection() - 1];
                     // Calculating the distance and time traveled
                     distance = GetDistance(from, to);
-                    travelTime = GetTimeElapsed(distance, myPlayer.GetShip().GetSpeed());
+                    travelTime = GetTimeElapsed(distance, GetShip().GetSpeed());
                     // Updates the user's travel time
-                    myPlayer.SetTravelTime(travelTime);
+                    SetTravelTime(travelTime);
                     // Checks to total time elapsed
-                    if (myPlayer.GetTravelTime() >= 40)
+                    if (GetTravelTime() >= 40)
                     {
-                        Utilities.EndGameReport(myPlayer);
+                        Utilities.EndGameReport(this);
                         Environment.Exit(-1);
                     }
                     // Updates the user's location
-                    myPlayer.SetLocation(destination);
+                    SetLocation(destination);
                 }
                 else
                 {
@@ -379,29 +379,29 @@ namespace SpaceGame
         }
 
         // Displays information about user and currentShip
-        public void ShowStatus(Player myPlayer)
+        public void ShowStatus()
         {
-            Console.WriteLine($"\nwallet: {myPlayer.GetWallet()}\ntravel time: {myPlayer.GetTravelTime()}\nlocation: {myPlayer.GetLocation()}\nfuel: {myPlayer.GetFuel()}");
+            Console.WriteLine($"\nwallet: {GetWallet()}\ntravel time: {GetTravelTime()}\nlocation: {GetLocation()}\nfuel: {GetFuel()}");
         }
 
         // Identifies the Planets within reach with the current fuel level 
-        private static List<Planet> ReachablePlanets(Player myPlayer, List<PlanetarySystem> universe)
+        public List<Planet> ReachablePlanets( List<PlanetarySystem> universe)
         {
             double maxRange = 0.0;
             List<Planet> reachablePlanets = new List<Planet>();
 
             // 1 ton of fuel is spent to travel 1 lightyear, regardless of the ship's model
-            maxRange = myPlayer.GetFuel();
+            maxRange = GetFuel();
             // loops through all planets and creates a list of all the reachable ones
             for (int i = 0; i < universe.Count(); i++)
             {
                 for (int j = 0; j < universe[i].GetPlanets().Count(); j++)
                 {
                     // Ensures that the current location is not listed
-                    if (universe[i].GetPlanets()[j].GetName() != myPlayer.GetLocation().GetName())
+                    if (universe[i].GetPlanets()[j].GetName() != GetLocation().GetName())
                     {
                         // Compares the distance of the next planet on the list to the maximum distance possible to travel with current fuel level
-                        if (GetDistance(myPlayer.GetLocation().GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
+                        if (GetDistance(GetLocation().GetCoordinates(), universe[i].GetPlanets()[j].GetCoordinates()) <= maxRange)
                         {
                             reachablePlanets.Add(universe[i].GetPlanets()[j]);
                         }
@@ -412,13 +412,13 @@ namespace SpaceGame
         }
 
         // Calculates the distance between two planets in lightyears
-        private static double GetDistance(double[] from, double[] to)
+        public double GetDistance(double[] from, double[] to)
         {
             return Math.Sqrt(Math.Pow((from[0] - to[0]), 2) + Math.Pow((from[1] - to[1]), 2));
         }
 
         // Calculates the time spent on each trip in years
-        private static double GetTimeElapsed(double distance, double W)
+        public double GetTimeElapsed(double distance, double W)
         {
             return distance / (Math.Pow(W, 10.0 / 3.0) + Math.Pow(10 - W, -11.0 / 3.0));
         }
